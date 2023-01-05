@@ -35,3 +35,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Next JS config because of env variables
+# See next.config.example.js
+next.config.js
