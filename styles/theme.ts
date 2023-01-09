@@ -7,6 +7,13 @@ export const { styled, css } = createStitches({
       primaryBg: "#fff",
       secondaryBg: "#eee",
       primaryColor: "#7ed6df",
+      error: "#e74c3c",
+      grey100: "#ecf0f1",
+      grey200: "#bdc3c7",
+      grey300: "#95a5a6",
+      grey400: "#7f8c8d",
+      grey800: "#34495e",
+      grey900: "#2c3e50",
     },
     radii: {
       0: "2px",
