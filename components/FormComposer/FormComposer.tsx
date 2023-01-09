@@ -25,24 +25,38 @@ export function FormComposer({
 }: Props) {
   const formContext = useFormikContext();
   const { errors, touched } = formContext as unknown as Record<string, any>;
+
   return (
     <form onSubmit={formContext.handleSubmit}>
       <Box
         css={{
+          containerType: "inline-size",
           display: "grid",
           columnGap: `$${columnGap}`,
           rowGap: `$${rowGap}`,
+
+          ".child-container": {
+            gridTemplateColumns: "1fr",
+          },
+
+          "@container(min-width: 420px)": {
+            ".child-container": {
+              gridTemplateColumns: "unset",
+              gridAutoFlow: "column",
+            },
+          },
         }}
       >
-        {fields.map((field) => {
+        {fields.map((field, index) => {
           const isGroup = Array.isArray(field);
           return isGroup ? (
             <Box
+              key={index}
+              className="child-container"
               css={{
                 display: "grid",
                 columnGap: `$${columnGap}`,
                 rowGap: `$${rowGap}`,
-                gridTemplateColumns: `repeat(${field.length}, 1fr)`,
               }}
             >
               {field.map((childField) =>
