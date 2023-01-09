@@ -22,7 +22,7 @@ const auth = getAuth(firebaseApp);
 const inter = Inter({ subsets: ["latin"] });
 
 const globalStyles = globalCss({
-  "*": { margin: 0, padding: 0 },
+  "*": { margin: 0, padding: 0, boxSizing: "border-box" },
   body: {
     fontFamily: `${inter.style.fontFamily}`,
   },
