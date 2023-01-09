@@ -4,14 +4,10 @@ import * as Yup from "yup";
 import { styled } from "../styles/theme";
 import { FormikProvider, useFormik } from "formik";
 import { FormComposer, IField } from "../components/FormComposer/FormComposer";
+import { Box } from "../components/Box/Box";
 
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 const auth = getAuth();
-
-const Layout = styled("div", {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-});
 
 const signupFormFields: IField[][] = [
   [
@@ -28,6 +24,7 @@ const signupFormFields: IField[][] = [
       layout: "half",
     },
   ],
+
   [
     {
       name: "confirmPassword",
@@ -53,6 +50,7 @@ export default function HomePage() {
       confirmPassword: "",
     },
     validateOnBlur: true,
+    validateOnChange: false,
     validationSchema: signUpValidationSchema,
     onSubmit: async (values) => await onSubmit(),
   });
@@ -72,12 +70,47 @@ export default function HomePage() {
 
   return (
     <Layout>
-      <div>
+      <div className={"content"}>
+        <Box css={{ width: "100%", mb: "$5" }}>
+          <h1>Sign up</h1>
+
+          <p>
+            Once you've created an account, you'll be able to track your
+            workouts, set fitness goals, and connect with friends for added
+            motivation. You'll also have access to a variety of workouts and
+            exercises tailored to your fitness level and interests.
+          </p>
+        </Box>
         <FormikProvider value={formik}>
           <FormComposer fields={signupFormFields} buttonLabel={"Sign up"} />
         </FormikProvider>
       </div>
-      <div>This is going to be visual</div>
+      <VisualSection>
+        <div className={"content"}></div>
+      </VisualSection>
     </Layout>
   );
 }
+
+const VisualSection = styled("div", {
+  backgroundColor: "$primaryColor",
+  color: "$white",
+});
+
+const Layout = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
+
+  ".content": {
+    height: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    px: "$4",
+
+    "@bp2": {
+      px: "$6",
+    },
+  },
+});

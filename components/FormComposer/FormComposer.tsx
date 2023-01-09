@@ -58,7 +58,7 @@ export function FormComposer({
           );
         })}
       </Box>
-      <Button css={{ mt: "$5" }} type={"submit"}>
+      <Button css={{ mt: "$6" }} type={"submit"}>
         {buttonLabel}
       </Button>
     </form>
