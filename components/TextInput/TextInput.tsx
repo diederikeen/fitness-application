@@ -11,7 +11,7 @@ const InputWrapper = styled("div", {
 });
 
 const StyledInput = styled("input", {
-  height: "30px",
+  height: "34px",
   px: "$3",
   border: "1px solid $grey300",
   borderRadius: "$1",
@@ -28,7 +28,8 @@ const StyledError = styled("span", {
   color: "$error",
   fontSize: "$3",
   position: "absolute",
-  bottom: "0",
+  top: "100%",
+  marginTop: "$1",
 });
 
 const StyledLabel = styled("label", {
