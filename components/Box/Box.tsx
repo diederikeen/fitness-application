@@ -7,8 +7,13 @@ const StyledBox = styled("div", {});
 
 interface Props {
   css: CSS;
+  className?: string;
 }
 
-export function Box({ children, css }: PropsWithChildren<Props>) {
-  return <StyledBox css={{ ...css }}>{children}</StyledBox>;
+export function Box({ children, css, ...props }: PropsWithChildren<Props>) {
+  return (
+    <StyledBox css={{ ...css }} {...props}>
+      {children}
+    </StyledBox>
+  );
 }
