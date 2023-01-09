@@ -20,6 +20,10 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   css?: CSS;
 }
 
-export function Button({ children, css }: Props) {
-  return <StyledButton css={{ ...css }}>{children}</StyledButton>;
+export function Button({ children, css, ...props }: Props) {
+  return (
+    <StyledButton css={{ ...css }} {...props}>
+      {children}
+    </StyledButton>
+  );
 }
