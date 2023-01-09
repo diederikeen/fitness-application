@@ -2,7 +2,7 @@ import { globalCss } from "@stitches/react";
 import type { AppProps } from "next/app";
 import { initializeApp } from "@firebase/app";
 import { getAuth } from "@firebase/auth";
-import { Inter } from "@next/font/google";
+import { Inter, Alegreya } from "@next/font/google";
 
 const firebaseConfig = {
   apiKey: process.env.FB_API_KEY,
@@ -20,11 +20,28 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 
 const inter = Inter({ subsets: ["latin"] });
+const alegreya = Alegreya({ weight: ["400", "500", "700"] });
 
 const globalStyles = globalCss({
   "*": { margin: 0, padding: 0, boxSizing: "border-box" },
   body: {
     fontFamily: `${inter.style.fontFamily}`,
+  },
+
+  "h1,h2,h3,h4,h5": {
+    fontFamily: `${alegreya.style.fontFamily}`,
+    fontWeight: 700,
+  },
+
+  form: {
+    width: "100%",
+  },
+
+  p: {
+    margin: "$3 0",
+    lineHeight: "1.5",
+    fontSize: "$4",
+    color: "$grey800",
   },
 });
 
