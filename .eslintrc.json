@@ -26,6 +26,9 @@
   "plugins": [
     "react"
   ],
+  "globals": {
+    "JSX": true
+  },
   "rules": {
     "react/react-in-jsx-scope": "off",
     "no-await-in-loop": "error",

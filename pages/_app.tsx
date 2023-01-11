@@ -39,8 +39,8 @@ const globalStyles = globalCss({
 
   p: {
     margin: "$3 0",
-    lineHeight: "1.5",
-    fontSize: "$4",
+    lineHeight: "$4",
+    fontSize: "$3",
     color: "$grey800",
   },
 });
