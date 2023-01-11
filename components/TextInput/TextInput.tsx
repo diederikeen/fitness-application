@@ -33,7 +33,7 @@ const StyledError = styled("span", {
 });
 
 const StyledLabel = styled("label", {
-  fontSize: "$3",
+  fontSize: "$2",
   fontWeight: "bold",
   textTransform: "uppercase",
 });
