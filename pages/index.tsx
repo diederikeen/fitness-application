@@ -5,6 +5,7 @@ import { styled } from "../styles/theme";
 import { Box } from "../components/Box/Box";
 import { AccountInformation } from "../flows/signup/accountInformation/AccountInformation";
 import { PersonalInformation } from "../flows/signup/personalInformation/PersonalInformation";
+import { getAuth } from "firebase/auth";
 
 interface Props {
   onSuccess: () => void;
@@ -15,8 +16,13 @@ const FLOW_MAP: Record<number, ({ onSuccess }: Props) => JSX.Element> = {
   1: PersonalInformation,
 };
 
+const auth = getAuth();
+
 export default function HomePage() {
-  const [step, setStep] = useState(1);
+  const { currentUser } = auth;
+
+  const initialStep = currentUser === null ? 0 : 1;
+  const [step, setStep] = useState(initialStep);
 
   const StepComponent = FLOW_MAP[step];
 
@@ -38,7 +44,7 @@ export default function HomePage() {
               exercises tailored to your fitness level and interests.
             </p>
           </Box>
-          <StepComponent onSuccess={() => onSuccess} />
+          <StepComponent onSuccess={onSuccess} />
         </Box>
       </div>
       <VisualSection>
