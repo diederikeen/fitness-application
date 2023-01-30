@@ -60,7 +60,6 @@ async function submitSignUpForm(
       const errorMessage = error.message;
 
       // @TODO: Create notification component
-      // in here we create a new user in our own database
       console.log({ errorCode, errorMessage });
     });
 }
