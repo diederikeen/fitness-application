@@ -1,25 +1,31 @@
 import { styled } from "../../styles/theme";
 import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute";
+import Masthead from "../../components/Masthead/Masthead";
+import { useUser } from "../../utils/useUser/useUser";
+import { User } from "@firebase/auth";
+
+export default function Dashboard() {
+  const { user } = useUser();
+
+  return (
+    <ProtectedRoute>
+      <Layout>
+        <Masthead user={user as User} />
+        <Navigation>Navigation</Navigation>
+      </Layout>
+    </ProtectedRoute>
+  );
+}
 
 const Layout = styled("div", {
   display: "grid",
   gridTemplateColumns: "[content] 1fr",
-  gridTemplateRows: "[masthead] 60px [content] auto",
+  gridTemplateRows: "[masthead] 68px [content] auto",
 
   "@bp2": {
     gridTemplateColumns: "[nav] 260px [content] auto",
-    gridTemplateRows: "[masthead] 60px [content] auto",
+    gridTemplateRows: "[masthead] 68px [content] auto",
   },
-});
-
-const Masthead = styled("header", {
-  gridColumnStart: 1,
-  gridColumnEnd: 2,
-  gridRow: "masthead",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  px: "$3",
 });
 
 const Navigation = styled("nav", {
@@ -30,19 +36,9 @@ const Navigation = styled("nav", {
   background: "white",
   py: "$3",
   px: "$4",
-
+  // backgroundColor: "$grey100",
+  borderRight: "1px solid $grey300",
   "@bp2": {
     display: "block",
   },
 });
-
-export default function Dashboard() {
-  return (
-    <ProtectedRoute>
-      <Layout>
-        <Masthead>Masthead</Masthead>
-        <Navigation>Navigation</Navigation>
-      </Layout>
-    </ProtectedRoute>
-  );
-}
