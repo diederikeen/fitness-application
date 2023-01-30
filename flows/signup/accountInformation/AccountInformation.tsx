@@ -33,18 +33,21 @@ export function AccountInformation({ onSuccess }: Props) {
 }
 
 async function onSignupSubmit(
-  values: { email: string; password: string },
+  values: Yup.InferType<typeof signUpValidationSchema>,
   onSuccess: Props["onSuccess"]
 ) {
-  return await submitSignUpForm(values.email, values.password, onSuccess);
+  return await submitSignUpForm(values, onSuccess);
 }
 
 async function submitSignUpForm(
-  email: string,
-  password: string,
+  values: Yup.InferType<typeof signUpValidationSchema>,
   successCallback: () => void
 ) {
-  return await createUserWithEmailAndPassword(auth, email, password)
+  return await createUserWithEmailAndPassword(
+    auth,
+    values.email,
+    values.password
+  )
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
@@ -70,27 +73,24 @@ const signUpValidationSchema = Yup.object({
     .required(),
 });
 
-const signupFormFields: IField[][] = [
-  [
-    {
-      name: "email",
-      type: "email",
-      label: "E-mail",
-      layout: "half",
-    },
-    {
-      name: "password",
-      type: "password",
-      label: "Password",
-      layout: "half",
-    },
-  ],
+const signupFormFields: IField[] = [
+  {
+    name: "email",
+    type: "email",
+    label: "E-mail",
+    layout: "half",
+  },
 
-  [
-    {
-      name: "confirmPassword",
-      type: "password",
-      label: "Confirm password",
-    },
-  ],
+  {
+    name: "password",
+    type: "password",
+    label: "Password",
+    layout: "half",
+  },
+
+  {
+    name: "confirmPassword",
+    type: "password",
+    label: "Confirm password",
+  },
 ];
