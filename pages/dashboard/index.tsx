@@ -1,4 +1,5 @@
 import { styled } from "../../styles/theme";
+import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute";
 
 const Layout = styled("div", {
   display: "grid",
@@ -37,9 +38,11 @@ const Navigation = styled("nav", {
 
 export default function Dashboard() {
   return (
-    <Layout>
-      <Masthead>Masthead</Masthead>
-      <Navigation>Navigation</Navigation>
-    </Layout>
+    <ProtectedRoute>
+      <Layout>
+        <Masthead>Masthead</Masthead>
+        <Navigation>Navigation</Navigation>
+      </Layout>
+    </ProtectedRoute>
   );
 }
