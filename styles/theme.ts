@@ -19,6 +19,7 @@ export const { styled, css } = createStitches({
       0: "2px",
       1: "3px",
       2: "4px",
+      3: "5px",
       4: "6px",
       5: "8px",
       6: "10px",

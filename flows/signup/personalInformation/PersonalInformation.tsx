@@ -113,10 +113,10 @@ const personalInfoFields: IField[][] = [
 ];
 
 const personalInfoValidationSchema = Yup.object({
-  firstName: Yup.string().required(),
-  lastName: Yup.string().required(),
-  zipcode: Yup.string().required(),
-  streetName: Yup.string().required(),
-  city: Yup.string().required(),
-  country: Yup.string().required(),
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  zipcode: Yup.string().required("Zipcode is required"),
+  streetName: Yup.string().required("Street name is required"),
+  city: Yup.string().required("City is required"),
+  country: Yup.string().required("Country is required"),
 });
