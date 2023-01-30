@@ -40,3 +40,10 @@ next-env.d.ts
 # Next JS config because of env variables
 # See next.config.example.js
 next.config.js
+
+# Misc
+.idea
+*.idea
+*.idea/*
+.vscode
+*.vscode
