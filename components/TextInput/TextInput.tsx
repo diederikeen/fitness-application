@@ -14,7 +14,7 @@ const StyledInput = styled("input", {
   height: "34px",
   px: "$3",
   border: "1px solid $grey300",
-  borderRadius: "$1",
+  borderRadius: "$4",
   variants: {
     hasError: {
       true: {
@@ -35,7 +35,7 @@ const StyledError = styled("span", {
 const StyledLabel = styled("label", {
   fontSize: "$2",
   fontWeight: "bold",
-  textTransform: "uppercase",
+  color: "$grey800",
 });
 
 interface Props {

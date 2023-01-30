@@ -4,7 +4,7 @@ import { initializeApp } from "@firebase/app";
 import { getAuth } from "@firebase/auth";
 import { Inter, Alegreya } from "@next/font/google";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: process.env.FB_API_KEY,
   authDomain: process.env.FB_AUTH_DOMAIN,
   databaseURL: process.env.FB_DATABASE_npURL,
@@ -15,9 +15,9 @@ const firebaseConfig = {
   measurementId: process.env.FB_MEASUREMENT_ID,
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
+export const firebaseApp = initializeApp(firebaseConfig);
 // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
-const auth = getAuth(firebaseApp);
+export const auth = getAuth(firebaseApp);
 
 const inter = Inter({ subsets: ["latin"] });
 const alegreya = Alegreya({ weight: ["400", "500", "700"] });
