@@ -14,6 +14,7 @@ export const { styled, css } = createStitches({
       grey400: "#7f8c8d",
       grey800: "#34495e",
       grey900: "#2c3e50",
+      textDefault: "#2c3e50",
     },
     radii: {
       0: "2px",
