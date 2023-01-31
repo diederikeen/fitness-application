@@ -1,4 +1,4 @@
-import ProtectedDashboard from "../../components/ProtectedDashboard/ProtectedDashboard";
+import { ProtectedDashboard } from "../../components/ProtectedDashboard/ProtectedDashboard";
 
 export default function Dashboard() {
   return (

@@ -5,7 +5,7 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { useUser } from "../../utils/useUser/useUser";
 import { PropsWithChildren } from "react";
 
-function ProtectedDashboard({ children }: PropsWithChildren) {
+export function ProtectedDashboard({ children }: PropsWithChildren) {
   const { user } = useUser();
 
   if (user == null) {
@@ -36,7 +36,7 @@ const Layout = styled("div", {
   },
 
   main: {
-    py: "$5",
+    py: "$7",
     px: "$9",
     scrollBehavior: "smooth",
     overflow: "scroll",
@@ -51,5 +51,3 @@ const Layout = styled("div", {
     },
   },
 });
-
-export default ProtectedDashboard;

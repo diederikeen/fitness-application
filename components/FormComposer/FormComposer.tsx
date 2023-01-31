@@ -2,10 +2,10 @@ import { useFormikContext } from "formik";
 import { Box } from "../Box/Box";
 import { Button } from "../Button/Button";
 import { renderFormField } from "../../utils/renderFormField/renderFormField";
+import { HTMLProps } from "react";
 
-export interface IField {
+export interface IField extends HTMLProps<HTMLInputElement> {
   name: string;
-  type: "select" | "text" | "password" | "number" | "email";
   label?: string;
   layout?: "full" | "half" | "quarter";
 }
@@ -15,6 +15,7 @@ interface Props {
   columnGap?: number;
   rowGap?: number;
   buttonLabel?: string;
+  inline?: boolean;
 }
 
 export function FormComposer({
@@ -22,18 +23,23 @@ export function FormComposer({
   buttonLabel = "Submit",
   columnGap = 3,
   rowGap = 5,
+  inline = false,
 }: Props) {
   const formContext = useFormikContext();
   const { errors, touched } = formContext as unknown as Record<string, any>;
 
   return (
-    <form onSubmit={formContext.handleSubmit}>
+    <form
+      onSubmit={formContext.handleSubmit}
+      style={inline ? { display: "flex", alignItems: "flex-end" } : {}}
+    >
       <Box
         css={{
           containerType: "inline-size",
           display: "grid",
           columnGap: `$${columnGap}`,
           rowGap: `$${rowGap}`,
+          width: inline ? "100%" : "auto",
 
           ".child-container": {
             gridTemplateColumns: "1fr",
@@ -72,7 +78,15 @@ export function FormComposer({
           );
         })}
       </Box>
-      <Button css={{ mt: "$6" }} type={"submit"}>
+      <Button
+        css={{
+          mt: "$6",
+          ml: inline ? "$4" : 0,
+          height: inline ? "34px" : "auto",
+          py: inline && 0,
+        }}
+        type={"submit"}
+      >
         {buttonLabel}
       </Button>
     </form>

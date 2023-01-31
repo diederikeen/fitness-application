@@ -9,7 +9,7 @@ const StyledButton = styled("button", {
   color: "$white",
   px: "$5",
   py: "$4",
-  borderRadius: "$1",
+  borderRadius: "$2",
   letterSpacing: "0.5px",
   fontSize: "$3",
   fontWeight: "600",
