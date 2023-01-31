@@ -67,6 +67,7 @@ const StyledNavItem = styled(Link, {
       true: {
         backgroundColor: "$primaryColor",
         color: "$white",
+        pointerEvents: "none",
       },
     },
   },

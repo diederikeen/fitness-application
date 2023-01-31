@@ -56,6 +56,7 @@ export const { styled, css } = createStitches({
       3: "600",
       4: "800",
     },
+    fonts: {},
     lineHeights: {
       0: 0.8,
       1: 1,
