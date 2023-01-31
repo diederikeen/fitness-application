@@ -5,14 +5,18 @@ import Masthead from "../../components/Masthead/Masthead";
 import Navigation from "../../components/Navigation/Navigation";
 
 import { useUser } from "../../utils/useUser/useUser";
-import { ICreatedUser } from "../../utils/types";
 
 export default function Dashboard() {
   const { user } = useUser();
+
+  if (user == null) {
+    return null;
+  }
+
   return (
     <ProtectedRoute>
       <Layout>
-        <Masthead user={user as ICreatedUser} />
+        <Masthead user={user} />
         <Navigation />
       </Layout>
     </ProtectedRoute>

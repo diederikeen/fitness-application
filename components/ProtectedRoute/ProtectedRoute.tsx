@@ -15,7 +15,7 @@ function ProtectedRoute({ children }: PropsWithChildren) {
     }
   }, [user, isLoading]);
 
-  if (user == null || isLoading) {
+  if (user == null && isLoading) {
     return <div>loading</div>;
   }
 

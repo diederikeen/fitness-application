@@ -11,7 +11,19 @@ function getAvatar(photoUrl: string | null, firstName: string) {
 
 function Masthead({ user }: { user: ICreatedUser }) {
   const avatar = getAvatar(user?.photoUrl, user.firstName);
-  return <StyledMasthead>{avatar}</StyledMasthead>;
+  return (
+    <StyledMasthead>
+      <div className="content">
+        <span className="greeting">
+          Welcome back, <br />
+          <strong>
+            {user.firstName} {user.lastName}
+          </strong>
+        </span>
+        {avatar}
+      </div>
+    </StyledMasthead>
+  );
 }
 
 const StyledMasthead = styled("header", {
@@ -26,6 +38,16 @@ const StyledMasthead = styled("header", {
 
   "@bp3": {
     px: "$5",
+  },
+
+  ".content": {
+    display: "flex",
+    alignItems: "center",
+  },
+
+  ".greeting": {
+    fontSize: "$2",
+    mr: "$3",
   },
 });
 

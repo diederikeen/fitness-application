@@ -21,8 +21,8 @@ export const firebaseApp = initializeApp(firebaseConfig);
 // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
 export const auth = getAuth(firebaseApp);
 
-const inter = Inter({ subsets: ["latin"] });
-const alegreya = Alegreya({ weight: ["400", "500", "700"] });
+export const inter = Inter({ subsets: ["latin"] });
+export const alegreya = Alegreya({ weight: ["400", "500", "700"] });
 
 const globalStyles = globalCss({
   "*": { margin: 0, padding: 0, boxSizing: "border-box" },
@@ -43,7 +43,11 @@ const globalStyles = globalCss({
     margin: "$3 0",
     lineHeight: "$4",
     fontSize: "$3",
-    color: "$grey800",
+    color: "$textDefault",
+  },
+
+  span: {
+    color: "$textDefault",
   },
 });
 
