@@ -1,17 +1,16 @@
-import { User } from "@firebase/auth";
 import { styled } from "../../styles/theme";
+import { ICreatedUser } from "../../utils/types";
 
-function getAvatar(photoUrl: string | null) {
+function getAvatar(photoUrl: string | null, firstName: string) {
   return photoUrl !== null ? (
     <StyledAvatar css={{ backgroundImage: `url(${photoUrl})` }} />
   ) : (
-    <StyledInitials>US</StyledInitials>
+    <StyledInitials>{firstName.substring(0, 2)}</StyledInitials>
   );
 }
 
-function Masthead({ user }: { user: User }) {
-  const avatar = getAvatar(user?.photoURL);
-
+function Masthead({ user }: { user: ICreatedUser }) {
+  const avatar = getAvatar(user?.photoUrl, user.firstName);
   return <StyledMasthead>{avatar}</StyledMasthead>;
 }
 
