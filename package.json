@@ -10,6 +10,7 @@
     "db:migrate": "npx prisma migrate dev --name"
   },
   "dependencies": {
+    "@iconscout/react-unicons": "^1.1.6",
     "@next/font": "13.1.1",
     "@prisma/client": "^4.8.1",
     "@stitches/react": "^1.2.8",
