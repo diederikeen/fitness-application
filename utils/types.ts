@@ -13,7 +13,7 @@ export interface IUserSignUpFormValues {
 
 export interface IUserPayload {
   uid: string;
-  photoUrl?: string;
+  photoUrl: string | null;
   email: string;
 }
 

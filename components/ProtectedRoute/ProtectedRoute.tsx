@@ -4,15 +4,19 @@ import { useRouter } from "next/router";
 
 function ProtectedRoute({ children }: PropsWithChildren) {
   const router = useRouter();
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
 
   useEffect(() => {
     if (user === null) {
       void router.push({
-        pathname: "/",
+        pathname: "/login",
       });
     }
-  }, [user]);
+  }, [user, isLoading]);
+
+  if (user == null || isLoading) {
+    return <div>loading</div>;
+  }
 
   return <>{children}</>;
 }
