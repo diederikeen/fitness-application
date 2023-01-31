@@ -1,6 +1,7 @@
 import { PropsWithChildren, useEffect } from "react";
-import { useUser } from "../../utils/useUser/useUser";
 import { useRouter } from "next/router";
+
+import { useUser } from "../../utils/useUser/useUser";
 
 function ProtectedRoute({ children }: PropsWithChildren) {
   const router = useRouter();

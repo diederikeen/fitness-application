@@ -4,6 +4,7 @@ import { initializeApp } from "@firebase/app";
 import { getAuth } from "@firebase/auth";
 import { Inter, Alegreya } from "@next/font/google";
 import { QueryClientProvider, QueryClient } from "react-query";
+import { UserProvider } from "../utils/useUser/useUser";
 
 export const firebaseConfig = {
   apiKey: process.env.FB_API_KEY,
@@ -52,7 +53,9 @@ export default function App({ Component, pageProps }: AppProps) {
   globalStyles();
   return (
     <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
+      <UserProvider>
+        <Component {...pageProps} />
+      </UserProvider>
     </QueryClientProvider>
   );
 }
