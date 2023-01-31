@@ -13,9 +13,9 @@ model User {
   firstName     		String
   lastName      	String
   photoUrl      	String?
-  streetName    	String
-  zipcode       	String
-  city          	String
-  country       	String
-  uid							String
+  streetName    	String?
+  zipcode       	String?
+  city          	String?
+  country       	String?
+  uid							String				@unique
 }

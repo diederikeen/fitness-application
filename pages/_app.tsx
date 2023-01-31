@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { initializeApp } from "@firebase/app";
 import { getAuth } from "@firebase/auth";
 import { Inter, Alegreya } from "@next/font/google";
+import { QueryClientProvider, QueryClient } from "react-query";
 
 export const firebaseConfig = {
   apiKey: process.env.FB_API_KEY,
@@ -45,7 +46,13 @@ const globalStyles = globalCss({
   },
 });
 
+const queryClient = new QueryClient();
+
 export default function App({ Component, pageProps }: AppProps) {
   globalStyles();
-  return <Component {...pageProps} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Component {...pageProps} />
+    </QueryClientProvider>
+  );
 }
