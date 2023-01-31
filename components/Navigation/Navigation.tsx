@@ -27,6 +27,7 @@ function Navigation() {
           key={item.path}
           href={item.path}
           isCurrent={asPath === item.path}
+          aria-current={asPath === item.path}
         >
           {item.icon} {item.label}
         </StyledNavItem>
