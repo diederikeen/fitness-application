@@ -1,5 +1,11 @@
 import { auth } from "../../pages/_app";
-import { useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import axios from "axios";
 import { User } from "@firebase/auth";
 import { useQuery } from "react-query";
@@ -15,7 +21,21 @@ async function fetchUserByEmail(email: string): Promise<ICreatedUser> {
     .then(({ data }) => data.user);
 }
 
-export function useUser() {
+interface IUserContext {
+  user: ICreatedUser | undefined;
+  signOut: () => Promise<void> | undefined;
+  isLoading: boolean;
+  isFetched: boolean;
+}
+
+const UserContext = createContext<IUserContext>({
+  user: undefined,
+  signOut: () => undefined,
+  isLoading: false,
+  isFetched: false,
+});
+
+export const UserProvider = ({ children }: { children: ReactNode }) => {
   const { currentUser, signOut } = auth;
   const [fbUser, setFbUser] = useState<User | undefined | null>(undefined);
   const [user, setUser] = useState<ICreatedUser | undefined>(undefined);
@@ -50,6 +70,23 @@ export function useUser() {
     });
     return () => unsubscribe();
   }, []);
+
+  return (
+    <UserContext.Provider
+      value={{
+        user,
+        isFetched,
+        isLoading,
+        signOut,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+export function useUser() {
+  const { user, isLoading, isFetched, signOut } = useContext(UserContext);
 
   return {
     user,
