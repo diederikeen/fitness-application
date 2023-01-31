@@ -17,5 +17,15 @@ model User {
   zipcode       	String?
   city          	String?
   country       	String?
-  uid							String				@unique
+  uid							String
+  weight					Weight[]
+}
+
+model Weight {
+	id Int @unique @default(autoincrement())
+	uid Int
+	weight Float
+	date DateTime @default(now())
+	note String?
+	user User @relation(fields: [uid], references: [id])
 }

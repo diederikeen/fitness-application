@@ -17,6 +17,13 @@ export interface IUserPayload {
   email: string;
 }
 
+export interface IWeightRecords {
+  date: Date;
+  weight: number;
+  note?: string;
+}
+
 export interface ICreatedUser
   extends Pick<IUserSignUpFormValues, "firstName" | "lastName">,
-    IUserPayload {}
+    IUserPayload,
+    IWeightRecords {}
