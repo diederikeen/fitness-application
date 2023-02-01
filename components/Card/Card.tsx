@@ -9,6 +9,10 @@ export function Card({ children, css = {} }: PropsWithChildren<{ css?: CSS }>) {
 const StyledCard = styled("div", {
   backgroundColor: "$white",
   borderRadius: "$5",
-  p: "$5",
+  p: "$3",
   boxShadow: "$0",
+
+  "@bp3": {
+    p: "$5",
+  },
 });

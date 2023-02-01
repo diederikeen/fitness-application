@@ -36,14 +36,22 @@ const Layout = styled("div", {
   },
 
   main: {
-    py: "$7",
-    px: "$9",
+    py: "$3",
+    px: "$4",
     scrollBehavior: "smooth",
     overflow: "scroll",
     width: "100%",
+    backgroundColor: "$secondaryBg",
 
     "@bp2": {
+      py: "$6",
+      px: "$7",
       maxHeight: "calc(100vh - 68px)",
+    },
+
+    "@bp3": {
+      py: "$7",
+      px: "$9",
     },
 
     li: {
