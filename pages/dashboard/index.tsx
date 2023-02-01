@@ -1,9 +1,11 @@
 import { ProtectedDashboard } from "../../components/ProtectedDashboard/ProtectedDashboard";
 
-export default function Dashboard() {
+function DashboardPage() {
   return (
     <ProtectedDashboard>
       <h1>Dashboard</h1>
     </ProtectedDashboard>
   );
 }
+
+export default DashboardPage;
