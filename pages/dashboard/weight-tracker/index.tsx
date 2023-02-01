@@ -15,23 +15,7 @@ import { useUser } from "../../../utils/useUser/useUser";
 import { useQuery } from "react-query";
 import { IWeightRecords } from "../../../utils/types";
 
-function weightRecordMap(records: IWeightRecords[]) {
-  return records.map((record) => ({
-    name: record.date,
-    value: record.weight,
-  }));
-}
-
-async function addWeightRecord(weight: number, uid?: string) {
-  return await axios
-    .post("/api/weight/add-weight", {
-      uid,
-      weight,
-    })
-    .then(({ data }) => data.data);
-}
-
-function WeightTracker() {
+function WeightTrackerPage() {
   const { user } = useUser();
 
   const formik = useFormik({
@@ -107,6 +91,22 @@ function WeightTracker() {
   );
 }
 
+function weightRecordMap(records: IWeightRecords[]) {
+  return records.map((record) => ({
+    name: record.date,
+    value: record.weight,
+  }));
+}
+
+async function addWeightRecord(weight: number, uid?: string) {
+  return await axios
+    .post("/api/weight/add-weight", {
+      uid,
+      weight,
+    })
+    .then(({ data }) => data.data);
+}
+
 const weightValidationSchema = yup.object({
   weight: yup.number().required(),
 });
@@ -120,4 +120,4 @@ const weightFields: IField[] = [
   },
 ];
 
-export default WeightTracker;
+export default WeightTrackerPage;

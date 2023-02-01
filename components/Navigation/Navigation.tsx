@@ -2,7 +2,7 @@ import { styled } from "../../styles/theme";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { UilDashboard, UilWeight } from "@iconscout/react-unicons";
+import { UilDashboard, UilWeight, UilDumbbell } from "@iconscout/react-unicons";
 
 const NAV_ITEMS = [
   {
@@ -14,6 +14,11 @@ const NAV_ITEMS = [
     path: "/dashboard/weight-tracker",
     icon: <UilWeight />,
     label: "Weight Tracker",
+  },
+  {
+    path: "/dashboard/exercises",
+    icon: <UilDumbbell />,
+    label: "Exercises",
   },
 ];
 
