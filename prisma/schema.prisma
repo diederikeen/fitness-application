@@ -17,15 +17,15 @@ model User {
   zipcode       	String?
   city          	String?
   country       	String?
-  uid							String
+  uid							String				@unique
   weight					Weight[]
 }
 
 model Weight {
 	id Int @unique @default(autoincrement())
-	uid Int
+	uid String
 	weight Float
 	date DateTime @default(now())
 	note String?
-	user User @relation(fields: [uid], references: [id])
+	user User @relation(fields: [uid], references: [uid])
 }
