@@ -11,7 +11,7 @@ const NAV_ITEMS = [
     label: "Dashboard",
   },
   {
-    path: "/weight-tracker",
+    path: "/dashboard/weight-tracker",
     icon: <UilWeight />,
     label: "Weight Tracker",
   },
@@ -37,7 +37,6 @@ function Navigation() {
 }
 
 const StyledNavItem = styled(Link, {
-  background: "red",
   borderRadius: "$3",
   height: "50px",
   display: "flex",
@@ -45,10 +44,10 @@ const StyledNavItem = styled(Link, {
   px: "$3",
   fontSize: "$3",
   fontWeight: "$3",
-  backgroundColor: "$grey100",
   transition: "background, 125ms ease",
   textDecoration: "none",
   color: "$textDefault",
+  // backgroundColor: "$grey100",
 
   ">svg": {
     mr: "$2",
@@ -60,7 +59,7 @@ const StyledNavItem = styled(Link, {
   },
 
   "&:not(:last-child)": {
-    mb: "$3",
+    mb: "$2",
   },
 
   variants: {
