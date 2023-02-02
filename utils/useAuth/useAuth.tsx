@@ -13,16 +13,6 @@ import nookies from "nookies";
 import { ICreatedUser } from "../types";
 import { auth } from "../../libs/firebase";
 
-async function fetchUserByEmail(email: string): Promise<ICreatedUser> {
-  return await axios
-    .get("/api/user/get-user", {
-      params: {
-        email,
-      },
-    })
-    .then(({ data }) => data.user);
-}
-
 interface IUserContext {
   user: ICreatedUser | undefined;
   signOut: any;
@@ -37,14 +27,29 @@ const AuthContext = createContext<IUserContext>({
   isFetched: false,
 });
 
+async function fetchUserByEmail(email: string): Promise<ICreatedUser> {
+  return await axios
+    .get("/api/user/get-user", {
+      params: {
+        email,
+      },
+    })
+    .then(({ data }) => {
+      return data.user;
+    });
+}
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { currentUser, signOut } = auth;
   const [fbUser, setFbUser] = useState<User | undefined | null>(null);
+  const [isFetched, setIsFetched] = useState(false);
   const [user, setUser] = useState<ICreatedUser | undefined>(undefined);
 
-  const { data, isFetched, isLoading } = useQuery(
+  const { data, isLoading } = useQuery(
     ["user"],
-    async () => await fetchUserByEmail(fbUser?.email as string),
+    async () => {
+      return await fetchUserByEmail(fbUser?.email as string);
+    },
     {
       enabled: fbUser !== undefined && fbUser !== null,
     }
@@ -53,6 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (data !== undefined && user === undefined) {
       setUser(data);
+      setIsFetched(true);
     }
   }, [fbUser, data]);
 
@@ -75,6 +81,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     });
     return () => unsubscribe();
+  }, []);
+
+  // force refresh the token every 10 minutes
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    const handle = setInterval(async () => {
+      const user = auth.currentUser;
+      if (user != null) await user.getIdToken(true);
+    }, 10 * 60 * 1000);
+
+    // clean up setInterval
+    return () => clearInterval(handle);
   }, []);
 
   return (
