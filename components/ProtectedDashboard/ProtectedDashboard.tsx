@@ -1,25 +1,29 @@
-import { styled } from "../../styles/theme";
-import Masthead from "../Masthead/Masthead";
-import Navigation from "../Navigation/Navigation";
-import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
-import { useAuth } from "../../utils/useAuth/useAuth";
+import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
 
-export function ProtectedDashboard({ children }: PropsWithChildren) {
-  const { user } = useAuth();
+import Masthead from "../Masthead/Masthead";
+import Navigation from "../Navigation/Navigation";
+import { useAuth } from "../../utils/useAuth/useAuth";
+import { styled } from "../../styles/theme";
 
-  if (user == null) {
+export function ProtectedDashboard({ children }: PropsWithChildren) {
+  const { user, isFetched } = useAuth();
+  const router = useRouter();
+
+  if (isFetched && user === undefined) {
+    void router.push("/login");
+  }
+
+  if (user === undefined) {
     return null;
   }
 
   return (
-    <ProtectedRoute>
-      <Layout>
-        <Masthead user={user} />
-        <Navigation />
-        <main role="content">{children}</main>
-      </Layout>
-    </ProtectedRoute>
+    <Layout>
+      <Masthead user={user} />
+      <Navigation />
+      <main role="content">{children}</main>
+    </Layout>
   );
 }
 
