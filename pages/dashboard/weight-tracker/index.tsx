@@ -11,12 +11,13 @@ import {
   IField,
 } from "../../../components/FormComposer/FormComposer";
 import axios from "axios";
-import { useUser } from "../../../utils/useUser/useUser";
-import { useQuery } from "react-query";
-import { IWeightRecords } from "../../../utils/types";
+import { useAuth } from "../../../utils/useAuth/useAuth";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { IWeightRecord } from "../../../utils/types";
 
 function WeightTrackerPage() {
-  const { user } = useUser();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const formik = useFormik({
     initialValues: {
@@ -25,21 +26,31 @@ function WeightTrackerPage() {
     validateOnBlur: true,
     validationSchema: weightValidationSchema,
     onSubmit: async (values) =>
-      await addWeightRecord(parseFloat(values.weight), user?.uid),
+      await addWeightRecord(parseFloat(values.weight)).then(
+        async () => await queryClient.invalidateQueries("weight")
+      ),
   });
 
-  const { data: weightRecords, isLoading } = useQuery(
+  const { data: records, isLoading } = useQuery(
     ["weight"],
-    async () =>
-      await axios.get("/api/weight/get-weight", {
-        params: {
-          uid: user?.uid,
-        },
-      }),
+    async (): Promise<IWeightRecord[]> =>
+      await axios
+        .get("/api/weight/get-weight")
+        .then(async ({ data }) => await Promise.resolve(data.records)),
     {
       enabled: user !== undefined,
     }
   );
+
+  const deleteWeightRecord = useMutation({
+    mutationFn: async (weightId: number) =>
+      await axios.post("/api/weight/delete-weight", {
+        weightId,
+      }),
+    onSuccess: async () => await queryClient.invalidateQueries("weight"),
+  });
+
+  const hasRecords = !isLoading && records != null && records?.length > 0;
 
   return (
     <ProtectedDashboard>
@@ -56,52 +67,78 @@ function WeightTrackerPage() {
         </p>
       </Box>
 
-      <Card css={{ mt: "$8", maxWidth: "720px" }}>
-        <h3>Tracker</h3>
+      <Box css={{ display: "flex", pt: "$8" }}>
+        <Card css={{ maxWidth: "720px", flexGrow: 1 }}>
+          <h3>Graph</h3>
 
-        <Box css={{ mt: "$5" }}>
-          {!isLoading && (
-            <ResponsiveContainer width={"100%"} aspect={2.5}>
-              <LineChart
-                width={730}
-                height={250}
-                data={weightRecordMap(weightRecords?.data.records)}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          <Box css={{ mt: "$5" }}>
+            {hasRecords && (
+              <ResponsiveContainer width={"100%"} aspect={2.5}>
+                <LineChart
+                  width={730}
+                  height={250}
+                  data={weightRecordMap(records)}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <YAxis domain={[75, 85]} tickLine={false} width={0} />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#3c40c6"
+                    strokeWidth={3}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
+          </Box>
+
+          <Box css={{ mt: "$5" }}>
+            <FormikProvider value={formik}>
+              <FormComposer inline fields={weightFields} buttonLabel="Add" />
+            </FormikProvider>
+          </Box>
+        </Card>
+
+        <Card css={{ maxWidth: "320px", flexGrow: 1, ml: "$6" }}>
+          <h3>List</h3>
+
+          {hasRecords &&
+            records?.map((record) => (
+              <Box
+                key={record.id}
+                css={{
+                  py: "$3",
+                  borderBottom: "1px solid $grey300",
+                  display: "flex",
+                  flexDirection: "row",
+                }}
               >
-                <YAxis domain={[75, 85]} tickLine={false} width={0} />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#3c40c6"
-                  strokeWidth={3}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          )}
-        </Box>
-
-        <Box css={{ mt: "$5" }}>
-          <FormikProvider value={formik}>
-            <FormComposer inline fields={weightFields} buttonLabel="Submit" />
-          </FormikProvider>
-        </Box>
-      </Card>
+                {record.weight} -{" "}
+                {new Intl.DateTimeFormat("nl-NL").format(new Date(record.date))}
+                <Box css={{ ml: "auto" }}>
+                  <button onClick={() => deleteWeightRecord.mutate(record.id)}>
+                    Delete
+                  </button>
+                </Box>
+              </Box>
+            ))}
+        </Card>
+      </Box>
     </ProtectedDashboard>
   );
 }
 
-function weightRecordMap(records: IWeightRecords[]) {
+function weightRecordMap(records: IWeightRecord[]) {
   return records.map((record) => ({
     name: record.date,
     value: record.weight,
   }));
 }
 
-async function addWeightRecord(weight: number, uid?: string) {
+async function addWeightRecord(weight: number) {
   return await axios
     .post("/api/weight/add-weight", {
-      uid,
       weight,
     })
     .then(({ data }) => data.data);

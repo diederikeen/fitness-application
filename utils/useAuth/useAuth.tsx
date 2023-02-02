@@ -9,7 +9,11 @@ import {
 import axios from "axios";
 import { User } from "@firebase/auth";
 import { useQuery } from "react-query";
+import nookies from "nookies";
+
 import { ICreatedUser } from "../types";
+
+import { auth } from "../../libs/firebase";
 
 async function fetchUserByEmail(email: string): Promise<ICreatedUser> {
   return await axios
@@ -23,28 +27,28 @@ async function fetchUserByEmail(email: string): Promise<ICreatedUser> {
 
 interface IUserContext {
   user: ICreatedUser | undefined;
-  signOut: () => Promise<void> | undefined;
+  signOut: any;
   isLoading: boolean;
   isFetched: boolean;
 }
 
-const UserContext = createContext<IUserContext>({
+const AuthContext = createContext<IUserContext>({
   user: undefined,
   signOut: () => undefined,
   isLoading: false,
   isFetched: false,
 });
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { currentUser, signOut } = auth;
-  const [fbUser, setFbUser] = useState<User | undefined | null>(undefined);
+  const [fbUser, setFbUser] = useState<User | undefined | null>(null);
   const [user, setUser] = useState<ICreatedUser | undefined>(undefined);
 
   const { data, isFetched, isLoading } = useQuery(
     ["user"],
     async () => await fetchUserByEmail(fbUser?.email as string),
     {
-      enabled: fbUser !== undefined,
+      enabled: fbUser !== undefined && fbUser !== null,
     }
   );
 
@@ -61,18 +65,22 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, [currentUser]);
 
   useEffect(() => {
-    const unsubscribe = auth.onIdTokenChanged((rawUser) => {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    const unsubscribe = auth.onIdTokenChanged(async (rawUser) => {
       if (rawUser !== null) {
+        const token = await rawUser.getIdToken();
         setFbUser(rawUser);
+        nookies.set(undefined, "AccessToken", token, { path: "/api" });
       } else {
         setFbUser(null);
+        nookies.set(undefined, "AccessToken", "", { path: "/api" });
       }
     });
     return () => unsubscribe();
   }, []);
 
   return (
-    <UserContext.Provider
+    <AuthContext.Provider
       value={{
         user,
         isFetched,
@@ -81,12 +89,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-    </UserContext.Provider>
+    </AuthContext.Provider>
   );
 };
 
-export function useUser() {
-  const { user, isLoading, isFetched, signOut } = useContext(UserContext);
+export function useAuth() {
+  const { user, isLoading, isFetched, signOut } = useContext(AuthContext);
 
   return {
     user,
