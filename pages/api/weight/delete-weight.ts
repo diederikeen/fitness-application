@@ -1,11 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../prisma/db";
-import { getUserByToken } from "../../../utils/getUserByToken/getUserByToken";
 
 interface IWeightPostRequest extends NextApiRequest {
   body: {
-    weight: number;
-    uid: string;
+    weightId: number;
   };
 }
 
@@ -13,17 +11,14 @@ export default async function handler(
   req: IWeightPostRequest,
   res: NextApiResponse
 ) {
-  const userByToken = await getUserByToken(req.cookies.AccessToken);
-
   try {
-    const record = await prisma.weight.create({
-      data: {
-        weight: req.body.weight,
-        uid: userByToken.uid,
+    const records = await prisma.weight.delete({
+      where: {
+        id: req.body.weightId,
       },
     });
 
-    return res.status(201).json({ record });
+    return res.status(201).json({ records });
   } catch (error) {
     console.error(error);
 
