@@ -2,11 +2,11 @@ import { styled } from "../../styles/theme";
 import Masthead from "../Masthead/Masthead";
 import Navigation from "../Navigation/Navigation";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
-import { useUser } from "../../utils/useUser/useUser";
+import { useAuth } from "../../utils/useAuth/useAuth";
 import { PropsWithChildren } from "react";
 
 export function ProtectedDashboard({ children }: PropsWithChildren) {
-  const { user } = useUser();
+  const { user } = useAuth();
 
   if (user == null) {
     return null;
