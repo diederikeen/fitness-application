@@ -1,4 +1,3 @@
-import { auth } from "../../pages/_app";
 import {
   createContext,
   ReactNode,
@@ -12,7 +11,6 @@ import { useQuery } from "react-query";
 import nookies from "nookies";
 
 import { ICreatedUser } from "../types";
-
 import { auth } from "../../libs/firebase";
 
 async function fetchUserByEmail(email: string): Promise<ICreatedUser> {
