@@ -73,7 +73,7 @@ function WeightTrackerPage() {
                 <Line
                   type="monotone"
                   dataKey="value"
-                  stroke="#7ed6df"
+                  stroke="#3c40c6"
                   strokeWidth={3}
                 />
               </LineChart>

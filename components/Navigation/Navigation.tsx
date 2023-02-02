@@ -2,7 +2,12 @@ import { styled } from "../../styles/theme";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { UilDashboard, UilWeight, UilDumbbell } from "@iconscout/react-unicons";
+import {
+  UilDashboard,
+  UilWeight,
+  UilDumbbell,
+  UilBooks,
+} from "@iconscout/react-unicons";
 
 const NAV_ITEMS = [
   {
@@ -16,8 +21,13 @@ const NAV_ITEMS = [
     label: "Weight Tracker",
   },
   {
-    path: "/dashboard/exercises",
+    path: "/dashboard/workouts",
     icon: <UilDumbbell />,
+    label: "Workouts",
+  },
+  {
+    path: "/dashboard/exercises",
+    icon: <UilBooks />,
     label: "Exercises",
   },
 ];
@@ -52,10 +62,9 @@ const StyledNavItem = styled(Link, {
   transition: "background, 125ms ease",
   textDecoration: "none",
   color: "$textDefault",
-  // backgroundColor: "$grey100",
 
   ">svg": {
-    mr: "$2",
+    mr: "$4",
   },
 
   "&:hover": {
