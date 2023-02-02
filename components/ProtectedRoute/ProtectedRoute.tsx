@@ -1,11 +1,11 @@
 import { PropsWithChildren, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { useUser } from "../../utils/useUser/useUser";
+import { useAuth } from "../../utils/useAuth/useAuth";
 
 function ProtectedRoute({ children }: PropsWithChildren) {
   const router = useRouter();
-  const { user, isLoading } = useUser();
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
     if (user === null) {

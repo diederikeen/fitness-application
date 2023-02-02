@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../prisma/db";
+import { getUserByToken } from "../../../utils/getUserByToken/getUserByToken";
 
 interface IWeightPostRequest extends NextApiRequest {
   query: {
@@ -12,13 +13,16 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
+    const userByToken = await getUserByToken(req.cookies.AccessToken);
+
     const records = await prisma.weight.findMany({
       where: {
-        uid: req.query.uid,
+        uid: userByToken.uid,
       },
       select: {
         weight: true,
         date: true,
+        id: true,
       },
     });
 

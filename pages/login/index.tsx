@@ -9,9 +9,8 @@ import {
   IField,
 } from "../../components/FormComposer/FormComposer";
 
-import { auth } from "../_app";
-
 import { styled } from "../../styles/theme";
+import { auth } from "../../libs/firebase";
 
 function LoginPage() {
   const router = useRouter();
@@ -60,10 +59,8 @@ async function onLoginSubmit(
 ) {
   return await signInWithEmailAndPassword(auth, values.email, values.password)
     .then(async (userCredential) => {
-      // @TODO: Redirect to "/dashboard"
       const user = userCredential.user;
       await onLoginSuccess();
-      // ...
     })
     .catch((error) => {
       const errorCode = error.code;
