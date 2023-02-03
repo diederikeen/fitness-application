@@ -13,11 +13,35 @@ const StyledButton = styled("button", {
   letterSpacing: "0.5px",
   fontSize: "$3",
   fontWeight: "600",
+
+  variants: {
+    disabled: {
+      true: {
+        backgroundColor: "$grey300",
+        cursor: "not-allowed",
+      },
+    },
+    ghost: {
+      true: {
+        background: "transparent",
+        color: "$textDefault",
+        px: "$3",
+        py: "$2",
+      },
+    },
+    danger: {
+      true: {
+        color: "$error",
+      },
+    },
+  },
 });
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   css?: CSS;
+  ghost?: boolean;
+  danger?: boolean;
 }
 
 export function Button({ children, css, ...props }: Props) {

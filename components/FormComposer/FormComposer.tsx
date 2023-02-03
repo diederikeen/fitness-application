@@ -16,6 +16,7 @@ interface Props {
   rowGap?: number;
   buttonLabel?: string;
   inline?: boolean;
+  isSubmitButtonDisabled?: boolean;
 }
 
 export function FormComposer({
@@ -24,9 +25,13 @@ export function FormComposer({
   columnGap = 3,
   rowGap = 5,
   inline = false,
+  isSubmitButtonDisabled = false,
 }: Props) {
   const formContext = useFormikContext();
-  const { errors, touched } = formContext as unknown as Record<string, any>;
+  const { errors, touched, isSubmitting } = formContext as unknown as Record<
+    string,
+    any
+  >;
 
   return (
     <form
@@ -86,6 +91,7 @@ export function FormComposer({
           py: inline && 0,
         }}
         type={"submit"}
+        disabled={isSubmitButtonDisabled || isSubmitting}
       >
         {buttonLabel}
       </Button>
