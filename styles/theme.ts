@@ -13,6 +13,7 @@ export const { styled, css } = createStitches({
       // primaryColor: "#5352ed",
       primaryColor: "#3c40c6",
       error: "#e74c3c",
+      success: "#05c46b",
       grey50: "#f9fafb",
       grey100: "#ecf0f1",
       grey200: "#bdc3c7",

@@ -1,4 +1,3 @@
-import { UilPen, UilTrash } from "@iconscout/react-unicons";
 import axios from "axios";
 import { FormikProvider, useFormik } from "formik";
 import { useState } from "react";
@@ -13,6 +12,7 @@ import { Dialog } from "@/components/Dialog/Dialog";
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDashboard";
 import { Typography } from "@/components/Typography/Typography";
+import { WeightRecordListItem } from "@/components/WeightRecordListItem/WeightRecordListItem";
 import { IWeightRecord } from "@/utils/types";
 import { useAuth } from "@/utils/useAuth/useAuth";
 
@@ -142,50 +142,14 @@ function WeightTrackerPage() {
 
           {hasRecords &&
             sortedRecords.reverse().map((record) => (
-              <Box
+              <WeightRecordListItem
                 key={record.id}
-                css={{
-                  py: "$3",
-                  borderBottom: "1px solid $grey100",
-                  alignItems: "center",
-                  display: "flex",
-                  flexDirection: "row",
-                  "&:last-child": {
-                    border: "none",
-                  },
+                record={record}
+                onDeleteClick={() => {
+                  setSelectedRecord(record);
+                  setIsModalOpen(true);
                 }}
-              >
-                <Box
-                  as="span"
-                  css={{ display: "flex", flexDirection: "column" }}
-                >
-                  <Typography as="strong" css={{ display: "block" }}>
-                    {record.weight}KG
-                  </Typography>
-                  <Typography css={{ color: "$grey400" }}>
-                    {new Intl.DateTimeFormat("nl-NL").format(
-                      new Date(record.date)
-                    )}
-                  </Typography>
-                </Box>
-                <Box css={{ ml: "auto" }}>
-                  <Button ghost small>
-                    <UilPen />
-                  </Button>
-
-                  <Button
-                    onClick={() => {
-                      setSelectedRecord(record);
-                      setIsModalOpen(true);
-                    }}
-                    ghost
-                    danger
-                    small
-                  >
-                    <UilTrash />
-                  </Button>
-                </Box>
-              </Box>
+              />
             ))}
         </Card>
         <Dialog.Root onClose={closeModal} isOpen={isModalOpen}>

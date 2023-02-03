@@ -9,7 +9,7 @@ import { Button } from "../Button/Button";
 export interface IField extends HTMLProps<HTMLInputElement> {
   name: string;
   label?: string;
-  layout?: "full" | "half" | "quarter";
+  inline?: boolean;
 }
 
 interface Props {
@@ -19,6 +19,7 @@ interface Props {
   buttonLabel?: string;
   inline?: boolean;
   isSubmitButtonDisabled?: boolean;
+  customSubmitButton?: boolean;
 }
 
 export function FormComposer({
@@ -28,6 +29,7 @@ export function FormComposer({
   rowGap = 5,
   inline = false,
   isSubmitButtonDisabled = false,
+  customSubmitButton,
 }: Props) {
   const formContext = useFormikContext();
   const { errors, touched, isSubmitting } = formContext as unknown as Record<
@@ -85,18 +87,20 @@ export function FormComposer({
           );
         })}
       </Box>
-      <Button
-        css={{
-          mt: "$6",
-          ml: inline ? "$4" : 0,
-          height: inline ? "34px" : "auto",
-          py: inline && 0,
-        }}
-        type={"submit"}
-        disabled={isSubmitButtonDisabled || isSubmitting}
-      >
-        {buttonLabel}
-      </Button>
+      {customSubmitButton === true ? null : (
+        <Button
+          css={{
+            mt: "$6",
+            ml: inline ? "$4" : 0,
+            height: inline ? "34px" : "auto",
+            py: inline && 0,
+          }}
+          type={"submit"}
+          disabled={isSubmitButtonDisabled || isSubmitting}
+        >
+          {buttonLabel}
+        </Button>
+      )}
     </form>
   );
 }

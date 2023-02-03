@@ -1,7 +1,7 @@
 import { Field } from "formik";
 
-import { IField } from "../../components/FormComposer/FormComposer";
-import { TextInput } from "../../components/TextInput/TextInput";
+import { IField } from "@/components/FormComposer/FormComposer";
+import { TextInput } from "@/components/TextInput/TextInput";
 
 export function renderFormField(field: IField, error: string, touched: string) {
   const Component = field.type === "select" ? null : TextInput;
