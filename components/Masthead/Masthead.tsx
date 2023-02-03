@@ -69,6 +69,7 @@ const StyledInitials = styled("div", {
 
   "&:hover": {
     cursor: "pointer",
+
     "&:after": {
       width: "calc(100% - 1px)",
       height: "calc(100% - 1px)",
@@ -89,6 +90,7 @@ const StyledInitials = styled("div", {
     border: "3px solid white",
     zIndex: -1,
     transition: "all 125ms ease",
+    pointerEvents: "none",
   },
 });
 
