@@ -22,17 +22,26 @@ const StyledButton = styled("button", {
         cursor: "not-allowed",
       },
     },
-    ghost: {
+    small: {
       true: {
-        background: "transparent",
-        color: "$textDefault",
         px: "$3",
         py: "$2",
       },
     },
+    ghost: {
+      true: {
+        background: "transparent",
+        color: "$textDefault",
+
+        "&:hover": {
+          backgroundColor: "$grey100",
+        },
+      },
+    },
     danger: {
       true: {
-        color: "$error",
+        backgroundColor: "$error",
+        color: "$white",
       },
     },
   },
@@ -43,6 +52,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   css?: CSS;
   ghost?: boolean;
   danger?: boolean;
+  small?: boolean;
 }
 
 export function Button({ children, css, ...props }: Props) {
