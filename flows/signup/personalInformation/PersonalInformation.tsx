@@ -3,15 +3,12 @@ import { getAuth } from "firebase/auth";
 import { FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 
-import {
-  FormComposer,
-  IField,
-} from "../../../components/FormComposer/FormComposer";
+import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import {
   IFirebaseUser,
   IUserPayload,
   IUserSignUpFormValues,
-} from "../../../utils/types";
+} from "@/utils/types";
 
 interface Props {
   onSuccess: () => void;

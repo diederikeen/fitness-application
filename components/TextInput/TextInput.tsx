@@ -1,7 +1,7 @@
 import { FormikFormProps, FormikProps } from "formik";
 import { InputHTMLAttributes, ReactNode } from "react";
 
-import { styled } from "../../styles/theme";
+import { styled } from "@/styles/theme";
 
 const InputWrapper = styled("div", {
   ".inner-wrapper": {

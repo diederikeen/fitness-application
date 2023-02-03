@@ -1,5 +1,5 @@
-import { styled } from "../../styles/theme";
-import { ICreatedUser } from "../../utils/types";
+import { styled } from "@/styles/theme";
+import { ICreatedUser } from "@/utils/types";
 
 function getAvatar(photoUrl: string | null, firstName: string) {
   return photoUrl !== null ? (

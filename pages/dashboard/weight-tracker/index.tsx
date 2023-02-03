@@ -6,18 +6,15 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import * as yup from "yup";
 
-import { Box } from "../../../components/Box/Box";
-import { Button } from "../../../components/Button/Button";
-import { Card } from "../../../components/Card/Card";
-import { Dialog } from "../../../components/Dialog/Dialog";
-import {
-  FormComposer,
-  IField,
-} from "../../../components/FormComposer/FormComposer";
-import { ProtectedDashboard } from "../../../components/ProtectedDashboard/ProtectedDashboard";
-import { Typography } from "../../../components/Typography/Typography";
-import { IWeightRecord } from "../../../utils/types";
-import { useAuth } from "../../../utils/useAuth/useAuth";
+import { Box } from "@/components/Box/Box";
+import { Button } from "@/components/Button/Button";
+import { Card } from "@/components/Card/Card";
+import { Dialog } from "@/components/Dialog/Dialog";
+import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
+import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDashboard";
+import { Typography } from "@/components/Typography/Typography";
+import { IWeightRecord } from "@/utils/types";
+import { useAuth } from "@/utils/useAuth/useAuth";
 
 function WeightTrackerPage() {
   const { user } = useAuth();

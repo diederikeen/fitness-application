@@ -1,9 +1,9 @@
+import { Alegreya, Inter } from "@next/font/google";
 import { globalCss } from "@stitches/react";
 import type { AppProps } from "next/app";
-import { Inter, Alegreya } from "@next/font/google";
-import { QueryClientProvider, QueryClient } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 
-import { AuthProvider } from "../utils/useAuth/useAuth";
+import { AuthProvider } from "@/utils/useAuth/useAuth";
 
 export const inter = Inter({ subsets: ["latin"] });
 export const alegreya = Alegreya({ weight: ["400", "500", "700"] });

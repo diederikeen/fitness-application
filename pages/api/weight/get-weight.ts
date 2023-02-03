@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { prisma } from "../../../prisma/db";
-import { getUserByToken } from "../../../utils/getUserByToken/getUserByToken";
+import { prisma } from "@/prisma/db";
+import { getUserByToken } from "@/utils/getUserByToken/getUserByToken";
 
 interface IWeightPostRequest extends NextApiRequest {
   query: {

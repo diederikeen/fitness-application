@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { prisma } from "../../../prisma/db";
+import { prisma } from "@/prisma/db";
 
 interface IWeightPostRequest extends NextApiRequest {
   body: {
