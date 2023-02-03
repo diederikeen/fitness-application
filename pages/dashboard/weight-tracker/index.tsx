@@ -1,6 +1,7 @@
 import { UilPen, UilTrash } from "@iconscout/react-unicons";
 import axios from "axios";
 import { FormikProvider, useFormik } from "formik";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import * as yup from "yup";
@@ -8,6 +9,7 @@ import * as yup from "yup";
 import { Box } from "../../../components/Box/Box";
 import { Button } from "../../../components/Button/Button";
 import { Card } from "../../../components/Card/Card";
+import { Dialog } from "../../../components/Dialog/Dialog";
 import {
   FormComposer,
   IField,
@@ -19,7 +21,11 @@ import { useAuth } from "../../../utils/useAuth/useAuth";
 
 function WeightTrackerPage() {
   const { user } = useAuth();
+  const [selectedRecord, setSelectedRecord] = useState<
+    IWeightRecord | undefined
+  >(undefined);
   const queryClient = useQueryClient();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -33,7 +39,7 @@ function WeightTrackerPage() {
       ),
   });
 
-  const { data: records, isLoading } = useQuery(
+  const { data: records, isFetched } = useQuery(
     ["weight"],
     async (): Promise<IWeightRecord[]> =>
       await axios
@@ -52,10 +58,32 @@ function WeightTrackerPage() {
     onSuccess: async () => await queryClient.invalidateQueries("weight"),
   });
 
-  const hasRecords = !isLoading && records != null && records?.length > 0;
-  const lastItem = hasRecords ? records[records?.length - 1] : undefined;
+  function closeModal() {
+    setSelectedRecord(undefined);
+    setIsModalOpen(false);
+  }
+
+  function deleteRecord() {
+    if (selectedRecord === undefined) {
+      return;
+    }
+
+    deleteWeightRecord.mutate(selectedRecord.id);
+    setSelectedRecord(undefined);
+    setIsModalOpen(false);
+  }
+
+  const hasRecords = isFetched && records !== undefined && records?.length > 0;
+  const sortedRecords = hasRecords
+    ? records?.sort((a, b) => sortOnDate(new Date(a.date), new Date(b.date)))
+    : [];
+  const lastItem =
+    sortedRecords.length > 0
+      ? sortedRecords[sortedRecords.length - 1]
+      : undefined;
+
   const isButtonDisabled =
-    lastItem != null
+    lastItem !== undefined
       ? new Date(lastItem.date).getDay() === new Date().getDay()
       : false;
 
@@ -116,55 +144,76 @@ function WeightTrackerPage() {
           <h3>List</h3>
 
           {hasRecords &&
-            records
-              ?.sort(
-                (a, b) =>
-                  new Date(b.date).getTime() - new Date(a.date).getTime()
-              )
-              .map((record) => (
+            sortedRecords.reverse().map((record) => (
+              <Box
+                key={record.id}
+                css={{
+                  py: "$3",
+                  borderBottom: "1px solid $grey100",
+                  alignItems: "center",
+                  display: "flex",
+                  flexDirection: "row",
+                  "&:last-child": {
+                    border: "none",
+                  },
+                }}
+              >
                 <Box
-                  key={record.id}
-                  css={{
-                    py: "$3",
-                    borderBottom: "1px solid $grey100",
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
+                  as="span"
+                  css={{ display: "flex", flexDirection: "column" }}
                 >
-                  <Box
-                    as="span"
-                    css={{ display: "flex", flexDirection: "column" }}
-                  >
-                    <Typography as="strong" css={{ display: "block" }}>
-                      {record.weight}KG
-                    </Typography>
-                    <Typography css={{ color: "$grey400" }}>
-                      {new Intl.DateTimeFormat("nl-NL").format(
-                        new Date(record.date)
-                      )}
-                    </Typography>
-                  </Box>
-                  <Box css={{ ml: "auto" }}>
-                    <Button
-                      onClick={() => deleteWeightRecord.mutate(record.id)}
-                      ghost
-                    >
-                      <UilPen />
-                    </Button>
-                    <Button
-                      onClick={() => deleteWeightRecord.mutate(record.id)}
-                      ghost
-                      danger
-                    >
-                      <UilTrash />
-                    </Button>
-                  </Box>
+                  <Typography as="strong" css={{ display: "block" }}>
+                    {record.weight}KG
+                  </Typography>
+                  <Typography css={{ color: "$grey400" }}>
+                    {new Intl.DateTimeFormat("nl-NL").format(
+                      new Date(record.date)
+                    )}
+                  </Typography>
                 </Box>
-              ))}
+                <Box css={{ ml: "auto" }}>
+                  <Button ghost small>
+                    <UilPen />
+                  </Button>
+
+                  <Button
+                    onClick={() => {
+                      setSelectedRecord(record);
+                      setIsModalOpen(true);
+                    }}
+                    ghost
+                    danger
+                    small
+                  >
+                    <UilTrash />
+                  </Button>
+                </Box>
+              </Box>
+            ))}
         </Card>
+        <Dialog.Root onClose={closeModal} isOpen={isModalOpen}>
+          <Typography as="h2">Deleting record</Typography>
+          <Typography as="p" css={{ maxWidth: "50%" }}>
+            Are you sure you want to delete this record? This action can not be
+            undone.
+          </Typography>
+
+          <Dialog.Footer>
+            <Button ghost small css={{ mr: "$4" }} onClick={closeModal}>
+              No, cancel
+            </Button>
+            <Button danger onClick={() => deleteRecord()}>
+              Yes, delete
+            </Button>
+          </Dialog.Footer>
+        </Dialog.Root>
       </Box>
     </ProtectedDashboard>
   );
+}
+
+function sortOnDate(a: Date, b: Date) {
+  return a.getTime() - b.getTime();
 }
 
 function weightRecordMap(records: IWeightRecord[]) {
@@ -173,7 +222,7 @@ function weightRecordMap(records: IWeightRecord[]) {
       name: new Date(record.date),
       value: record.weight,
     }))
-    .sort((a, b) => a.name.getTime() - b.name.getTime());
+    .sort((a, b) => sortOnDate(a.name, b.name));
 }
 
 async function addWeightRecord(weight: number) {
