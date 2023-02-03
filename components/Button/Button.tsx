@@ -42,6 +42,10 @@ const StyledButton = styled("button", {
       true: {
         backgroundColor: "$error",
         color: "$white",
+
+        "&:hover": {
+          background: "$error",
+        },
       },
     },
   },
