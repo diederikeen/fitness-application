@@ -1,13 +1,13 @@
-import { styled } from "../../styles/theme";
+import {
+  UilBooks,
+  UilDashboard,
+  UilDumbbell,
+  UilWeight,
+} from "@iconscout/react-unicons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import {
-  UilDashboard,
-  UilWeight,
-  UilDumbbell,
-  UilBooks,
-} from "@iconscout/react-unicons";
+import { styled } from "../../styles/theme";
 
 const NAV_ITEMS = [
   {

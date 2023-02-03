@@ -1,22 +1,21 @@
+import { UilPen, UilTrash } from "@iconscout/react-unicons";
+import axios from "axios";
 import { FormikProvider, useFormik } from "formik";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import * as yup from "yup";
-import { ProtectedDashboard } from "../../../components/ProtectedDashboard/ProtectedDashboard";
 
-import { Card } from "../../../components/Card/Card";
-
-import { Line, ResponsiveContainer, LineChart, Tooltip, YAxis } from "recharts";
 import { Box } from "../../../components/Box/Box";
+import { Button } from "../../../components/Button/Button";
+import { Card } from "../../../components/Card/Card";
 import {
   FormComposer,
   IField,
 } from "../../../components/FormComposer/FormComposer";
-import axios from "axios";
-import { useAuth } from "../../../utils/useAuth/useAuth";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { IWeightRecord } from "../../../utils/types";
+import { ProtectedDashboard } from "../../../components/ProtectedDashboard/ProtectedDashboard";
 import { Typography } from "../../../components/Typography/Typography";
-import { Button } from "../../../components/Button/Button";
-import { UilPen, UilTrash } from "@iconscout/react-unicons";
+import { IWeightRecord } from "../../../utils/types";
+import { useAuth } from "../../../utils/useAuth/useAuth";
 
 function WeightTrackerPage() {
   const { user } = useAuth();

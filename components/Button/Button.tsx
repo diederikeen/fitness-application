@@ -1,6 +1,7 @@
-import { styled } from "../../styles/theme";
-import { ButtonHTMLAttributes, ReactNode } from "react";
 import { CSS } from "@stitches/react";
+import { ButtonHTMLAttributes, ReactNode } from "react";
+
+import { styled } from "../../styles/theme";
 
 const StyledButton = styled("button", {
   fontFamily: "inherit",
