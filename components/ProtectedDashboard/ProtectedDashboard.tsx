@@ -30,11 +30,11 @@ export function ProtectedDashboard({ children }: PropsWithChildren) {
 const Layout = styled("div", {
   display: "grid",
   gridTemplateColumns: "[content] 1fr",
-  gridTemplateRows: "[masthead] 68px [content] auto",
+  gridTemplateRows: "[masthead] 76px [content] auto",
 
   "@bp2": {
     gridTemplateColumns: "[nav] 260px [content] auto",
-    gridTemplateRows: "[masthead] 68px [content] auto",
+    gridTemplateRows: "[masthead] 76px [content] auto",
     maxHeight: "100vh",
     overflow: "hidden",
   },
@@ -50,7 +50,7 @@ const Layout = styled("div", {
     "@bp2": {
       py: "$6",
       px: "$7",
-      maxHeight: "calc(100vh - 68px)",
+      maxHeight: "calc(100vh - 76px)",
     },
 
     "@bp3": {
