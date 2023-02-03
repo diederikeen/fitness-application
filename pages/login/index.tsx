@@ -1,16 +1,12 @@
-import { FormikProvider, useFormik } from "formik";
-import * as Yup from "yup";
 import { signInWithEmailAndPassword } from "@firebase/auth";
+import { FormikProvider, useFormik } from "formik";
 import { useRouter } from "next/router";
+import * as Yup from "yup";
 
-import { Box } from "../../components/Box/Box";
-import {
-  FormComposer,
-  IField,
-} from "../../components/FormComposer/FormComposer";
-
-import { styled } from "../../styles/theme";
-import { auth } from "../../libs/firebase";
+import { Box } from "@/components/Box/Box";
+import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
+import { auth } from "@/libs/firebase";
+import { styled } from "@/styles/theme";
 
 function LoginPage() {
   const router = useRouter();

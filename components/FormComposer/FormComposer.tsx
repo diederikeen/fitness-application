@@ -1,7 +1,8 @@
 import { useFormikContext } from "formik";
 import { HTMLProps } from "react";
 
-import { renderFormField } from "../../utils/renderFormField/renderFormField";
+import { renderFormField } from "@/utils/renderFormField/renderFormField";
+
 import { Box } from "../Box/Box";
 import { Button } from "../Button/Button";
 

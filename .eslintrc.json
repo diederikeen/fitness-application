@@ -51,7 +51,35 @@
   "settings": {
     "import/resolver": {
       "typescript": true,
-      "node": "true"
+      "node": "true",
+      "alias": [
+        [
+          "@/components/*",
+          "./components/*"
+        ],
+        [
+          "@/libs/*",
+          "./libs/*"
+        ],
+        [
+          "@/utils/*",
+          "./utils/*"
+        ],
+        [
+          "@/styles/*",
+          "./styles/*"
+        ],
+        [
+          "@/prisma/*",
+          "./prisma/*"
+        ]
+      ],
+      "extensions": [
+        ".js",
+        ".jsx",
+        ".ts",
+        ".tsx"
+      ]
     }
   }
 }

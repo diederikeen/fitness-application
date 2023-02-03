@@ -1,6 +1,7 @@
-import { styled } from "../../styles/theme";
-import { PropsWithChildren } from "react";
 import { CSS } from "@stitches/react";
+import { PropsWithChildren } from "react";
+
+import { styled } from "@/styles/theme";
 
 export function Card({ children, css = {} }: PropsWithChildren<{ css?: CSS }>) {
   return <StyledCard css={{ ...css }}>{children}</StyledCard>;

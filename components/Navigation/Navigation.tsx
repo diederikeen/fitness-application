@@ -7,7 +7,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { styled } from "../../styles/theme";
+import { styled } from "@/styles/theme";
 
 const NAV_ITEMS = [
   {

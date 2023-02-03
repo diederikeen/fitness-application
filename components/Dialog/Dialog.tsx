@@ -3,7 +3,7 @@ import * as RadixDialog from "@radix-ui/react-dialog";
 import { keyframes } from "@stitches/react";
 import { PropsWithChildren } from "react";
 
-import { styled } from "../../styles/theme";
+import { styled } from "@/styles/theme";
 
 interface Props {
   isOpen?: boolean;

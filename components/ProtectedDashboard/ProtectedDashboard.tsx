@@ -1,8 +1,9 @@
 import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
 
-import { styled } from "../../styles/theme";
-import { useAuth } from "../../utils/useAuth/useAuth";
+import { styled } from "@/styles/theme";
+import { useAuth } from "@/utils/useAuth/useAuth";
+
 import Masthead from "../Masthead/Masthead";
 import Navigation from "../Navigation/Navigation";
 

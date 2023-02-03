@@ -2,10 +2,7 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 
-import {
-  FormComposer,
-  IField,
-} from "../../../components/FormComposer/FormComposer";
+import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 
 const auth = getAuth();
 

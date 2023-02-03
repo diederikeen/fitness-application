@@ -1,12 +1,11 @@
-import { useState } from "react";
 import { getAuth } from "firebase/auth";
+import { useState } from "react";
+
+import { Box } from "@/components/Box/Box";
+import { styled } from "@/styles/theme";
 
 import { AccountInformation } from "../../flows/signup/accountInformation/AccountInformation";
 import { PersonalInformation } from "../../flows/signup/personalInformation/PersonalInformation";
-
-import { Box } from "../../components/Box/Box";
-
-import { styled } from "../../styles/theme";
 
 interface Props {
   onSuccess: () => void;
