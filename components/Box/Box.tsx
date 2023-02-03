@@ -6,13 +6,19 @@ import { PropsWithChildren } from "react";
 const StyledBox = styled("div", {});
 
 interface Props {
+  as?: "div" | "span";
   css: CSS;
   className?: string;
 }
 
-export function Box({ children, css, ...props }: PropsWithChildren<Props>) {
+export function Box({
+  children,
+  as = "div",
+  css,
+  ...props
+}: PropsWithChildren<Props>) {
   return (
-    <StyledBox css={{ ...css }} {...props}>
+    <StyledBox css={{ ...css }} {...props} as={as}>
       {children}
     </StyledBox>
   );

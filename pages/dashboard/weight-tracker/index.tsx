@@ -14,6 +14,9 @@ import axios from "axios";
 import { useAuth } from "../../../utils/useAuth/useAuth";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { IWeightRecord } from "../../../utils/types";
+import { Typography } from "../../../components/Typography/Typography";
+import { Button } from "../../../components/Button/Button";
+import { UilPen, UilTrash } from "@iconscout/react-unicons";
 
 function WeightTrackerPage() {
   const { user } = useAuth();
@@ -51,6 +54,11 @@ function WeightTrackerPage() {
   });
 
   const hasRecords = !isLoading && records != null && records?.length > 0;
+  const lastItem = hasRecords ? records[records?.length - 1] : undefined;
+  const isButtonDisabled =
+    lastItem != null
+      ? new Date(lastItem.date).getDay() === new Date().getDay()
+      : false;
 
   return (
     <ProtectedDashboard>
@@ -95,7 +103,12 @@ function WeightTrackerPage() {
 
           <Box css={{ mt: "$5" }}>
             <FormikProvider value={formik}>
-              <FormComposer inline fields={weightFields} buttonLabel="Add" />
+              <FormComposer
+                inline
+                fields={weightFields}
+                buttonLabel="Add"
+                isSubmitButtonDisabled={isButtonDisabled}
+              />
             </FormikProvider>
           </Box>
         </Card>
@@ -104,25 +117,51 @@ function WeightTrackerPage() {
           <h3>List</h3>
 
           {hasRecords &&
-            records?.map((record) => (
-              <Box
-                key={record.id}
-                css={{
-                  py: "$3",
-                  borderBottom: "1px solid $grey300",
-                  display: "flex",
-                  flexDirection: "row",
-                }}
-              >
-                {record.weight} -{" "}
-                {new Intl.DateTimeFormat("nl-NL").format(new Date(record.date))}
-                <Box css={{ ml: "auto" }}>
-                  <button onClick={() => deleteWeightRecord.mutate(record.id)}>
-                    Delete
-                  </button>
+            records
+              ?.sort(
+                (a, b) =>
+                  new Date(b.date).getTime() - new Date(a.date).getTime()
+              )
+              .map((record) => (
+                <Box
+                  key={record.id}
+                  css={{
+                    py: "$3",
+                    borderBottom: "1px solid $grey100",
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Box
+                    as="span"
+                    css={{ display: "flex", flexDirection: "column" }}
+                  >
+                    <Typography as="strong" css={{ display: "block" }}>
+                      {record.weight}KG
+                    </Typography>
+                    <Typography css={{ color: "$grey400" }}>
+                      {new Intl.DateTimeFormat("nl-NL").format(
+                        new Date(record.date)
+                      )}
+                    </Typography>
+                  </Box>
+                  <Box css={{ ml: "auto" }}>
+                    <Button
+                      onClick={() => deleteWeightRecord.mutate(record.id)}
+                      ghost
+                    >
+                      <UilPen />
+                    </Button>
+                    <Button
+                      onClick={() => deleteWeightRecord.mutate(record.id)}
+                      ghost
+                      danger
+                    >
+                      <UilTrash />
+                    </Button>
+                  </Box>
                 </Box>
-              </Box>
-            ))}
+              ))}
         </Card>
       </Box>
     </ProtectedDashboard>
@@ -130,10 +169,12 @@ function WeightTrackerPage() {
 }
 
 function weightRecordMap(records: IWeightRecord[]) {
-  return records.map((record) => ({
-    name: record.date,
-    value: record.weight,
-  }));
+  return records
+    .map((record) => ({
+      name: new Date(record.date),
+      value: record.weight,
+    }))
+    .sort((a, b) => a.name.getTime() - b.name.getTime());
 }
 
 async function addWeightRecord(weight: number) {
