@@ -1,3 +1,6 @@
+import { User } from "@firebase/auth";
+import axios from "axios";
+import nookies from "nookies";
 import {
   createContext,
   ReactNode,
@@ -5,13 +8,10 @@ import {
   useEffect,
   useState,
 } from "react";
-import axios from "axios";
-import { User } from "@firebase/auth";
 import { useQuery } from "react-query";
-import nookies from "nookies";
 
-import { ICreatedUser } from "../types";
 import { auth } from "../../libs/firebase";
+import { ICreatedUser } from "../types";
 
 interface IUserContext {
   user: ICreatedUser | undefined;

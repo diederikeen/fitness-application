@@ -1,15 +1,15 @@
-import { FormikProvider, useFormik } from "formik";
-import { getAuth } from "firebase/auth";
 import axios from "axios";
-
+import { getAuth } from "firebase/auth";
+import { FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
+
 import {
   FormComposer,
   IField,
 } from "../../../components/FormComposer/FormComposer";
 import {
-  IUserPayload,
   IFirebaseUser,
+  IUserPayload,
   IUserSignUpFormValues,
 } from "../../../utils/types";
 
@@ -47,7 +47,7 @@ export function PersonalInformation({ onSuccess }: Props) {
 
       return await onSignupSubmit(values, {
         uid: currentUser?.uid,
-        photoUrl: currentUser?.photoURL ?? undefined,
+        photoUrl: currentUser?.photoURL,
         email: currentUser?.email,
       });
     },

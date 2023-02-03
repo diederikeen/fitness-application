@@ -1,12 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 
+import { prisma } from "../../../prisma/db";
 import {
   ICreatedUser,
   IUserPayload,
   IUserSignUpFormValues,
 } from "../../../utils/types";
-import { prisma } from "../../../prisma/db";
 
 interface IRequestBody {
   userDetails: IUserSignUpFormValues;

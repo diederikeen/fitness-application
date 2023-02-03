@@ -1,8 +1,9 @@
 import { useFormikContext } from "formik";
+import { HTMLProps } from "react";
+
+import { renderFormField } from "../../utils/renderFormField/renderFormField";
 import { Box } from "../Box/Box";
 import { Button } from "../Button/Button";
-import { renderFormField } from "../../utils/renderFormField/renderFormField";
-import { HTMLProps } from "react";
 
 export interface IField extends HTMLProps<HTMLInputElement> {
   name: string;

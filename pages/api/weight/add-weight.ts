@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+
 import { prisma } from "../../../prisma/db";
 import { getUserByToken } from "../../../utils/getUserByToken/getUserByToken";
 
