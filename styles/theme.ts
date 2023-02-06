@@ -133,3 +133,5 @@ export const { styled, css } = createStitches({
     }),
   },
 });
+
+export const MAX_MAIN_CARD_SIZE = "720px";
