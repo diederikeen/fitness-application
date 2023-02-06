@@ -2,10 +2,9 @@ import { getAuth } from "firebase/auth";
 import { useState } from "react";
 
 import { Box } from "@/components/Box/Box";
+import { AccountInformation } from "@/features/sign-up/accountInformation/AccountInformation";
+import { PersonalInformation } from "@/features/sign-up/personalInformation/PersonalInformation";
 import { styled } from "@/styles/theme";
-
-import { AccountInformation } from "../../flows/signup/accountInformation/AccountInformation";
-import { PersonalInformation } from "../../flows/signup/personalInformation/PersonalInformation";
 
 interface Props {
   onSuccess: () => void;

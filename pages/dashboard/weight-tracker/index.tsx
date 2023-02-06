@@ -2,17 +2,17 @@ import axios from "axios";
 import { FormikProvider, useFormik } from "formik";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Line, LineChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import * as yup from "yup";
 
 import { Box } from "@/components/Box/Box";
-import { Button } from "@/components/Button/Button";
 import { Card } from "@/components/Card/Card";
-import { Dialog } from "@/components/Dialog/Dialog";
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDashboard";
 import { Typography } from "@/components/Typography/Typography";
-import { WeightRecordListItem } from "@/components/WeightRecordListItem/WeightRecordListItem";
+import { DeleteRecordDialog } from "@/features/weight-tracker/DeleteRecordDialog/DeleteRecordDialog";
+import { WeightGraph } from "@/features/weight-tracker/WeightGraph/WeightGraph";
+import { WeightRecordListItem } from "@/features/weight-tracker/WeightRecordListItem/WeightRecordListItem";
+import { MAX_MAIN_CARD_SIZE, styled } from "@/styles/theme";
 import { IWeightRecord } from "@/utils/types";
 import { useAuth } from "@/utils/useAuth/useAuth";
 
@@ -84,14 +84,11 @@ function WeightTrackerPage() {
       ? new Date(lastItem.date).getDay() === new Date().getDay()
       : false;
 
-  const lowestGraphValue = hasRecords ? getMinGraphValue(records) : 0;
-  const highestGraphValue = hasRecords ? getMaxGraphValue(records) : 0;
-
   return (
     <ProtectedDashboard>
       <Box css={{ maxWidth: "770px" }}>
-        <h1>Weight</h1>
-        <p>
+        <Typography as="h1">Body Weight</Typography>
+        <Typography as="p">
           Tracking your body weight can provide valuable insights into your
           overall health and fitness. By regularly monitoring changes in weight,
           you can detect potential issues, such as an unexpected increase that
@@ -99,83 +96,63 @@ function WeightTrackerPage() {
           exercise habits. Additionally, tracking your weight can help you stay
           accountable and motivated as you work towards your health and fitness
           goals.
-        </p>
+        </Typography>
       </Box>
 
-      <Box css={{ display: "flex", pt: "$8" }}>
-        <Card css={{ maxWidth: "720px", flexGrow: 1 }}>
-          <h3>Graph</h3>
+      <Content>
+        <CardWrapper>
+          <Card css={{ flexGrow: 1, maxWidth: MAX_MAIN_CARD_SIZE }}>
+            <h3>Graph</h3>
 
-          <Box css={{ mt: "$5" }}>
-            {hasRecords && (
-              <ResponsiveContainer width={"100%"} aspect={2.5}>
-                <LineChart
-                  width={730}
-                  height={250}
-                  data={weightRecordMap(records)}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                  <YAxis
-                    domain={[lowestGraphValue, highestGraphValue]}
-                    tickLine={false}
-                    width={0}
-                  />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#3c40c6"
-                    strokeWidth={3}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            )}
-          </Box>
+            <Box css={{ mt: "$5" }}>
+              {hasRecords && <WeightGraph records={sortedRecords} />}
+            </Box>
 
-          <Box css={{ mt: "$5" }}>
-            <FormikProvider value={formik}>
-              <FormComposer
-                inline
-                fields={weightFields}
-                buttonLabel="Add"
-                isSubmitButtonDisabled={isButtonDisabled}
-              />
-            </FormikProvider>
-          </Box>
-        </Card>
+            <Box css={{ mt: "$5" }}>
+              <FormikProvider value={formik}>
+                <FormComposer
+                  inline
+                  fields={weightFields}
+                  buttonLabel="Add"
+                  isSubmitButtonDisabled={isButtonDisabled}
+                />
+              </FormikProvider>
+            </Box>
+          </Card>
 
-        <Card css={{ maxWidth: "320px", flexGrow: 1, ml: "$6" }}>
-          <h3>List</h3>
+          <Card
+            css={{
+              maxWidth: MAX_MAIN_CARD_SIZE,
+              mt: "$4",
+              "@container weight-content (min-width: 980px)": {
+                mt: "0",
+                ml: "$6",
+                width: "100%",
+                maxWidth: "320px",
+              },
+            }}
+          >
+            <h3>List</h3>
 
-          {hasRecords &&
-            sortedRecords.reverse().map((record) => (
-              <WeightRecordListItem
-                key={record.id}
-                record={record}
-                onDeleteClick={() => {
-                  setSelectedRecord(record);
-                  setIsModalOpen(true);
-                }}
-              />
-            ))}
-        </Card>
-        <Dialog.Root onClose={closeModal} isOpen={isModalOpen}>
-          <Typography as="h2">Deleting record</Typography>
-          <Typography as="p" css={{ maxWidth: "50%" }}>
-            Are you sure you want to delete this record? This action can not be
-            undone.
-          </Typography>
-
-          <Dialog.Footer>
-            <Button ghost small css={{ mr: "$4" }} onClick={closeModal}>
-              No, cancel
-            </Button>
-            <Button danger onClick={() => deleteRecord()}>
-              Yes, delete
-            </Button>
-          </Dialog.Footer>
-        </Dialog.Root>
-      </Box>
+            {hasRecords &&
+              sortedRecords.reverse().map((record) => (
+                <WeightRecordListItem
+                  key={record.id}
+                  record={record}
+                  onDeleteClick={() => {
+                    setSelectedRecord(record);
+                    setIsModalOpen(true);
+                  }}
+                />
+              ))}
+          </Card>
+        </CardWrapper>
+        <DeleteRecordDialog
+          onClose={closeModal}
+          isDialogOpen={isModalOpen}
+          action={() => deleteRecord()}
+        />
+      </Content>
     </ProtectedDashboard>
   );
 }
@@ -184,37 +161,12 @@ function sortOnDate(a: Date, b: Date) {
   return a.getTime() - b.getTime();
 }
 
-function weightRecordMap(records: IWeightRecord[]) {
-  return records
-    .map((record) => ({
-      name: new Date(record.date),
-      value: record.weight,
-    }))
-    .sort((a, b) => sortOnDate(a.name, b.name));
-}
-
 async function addWeightRecord(weight: number) {
   return await axios
     .post("/api/weight/add-weight", {
       weight,
     })
     .then(({ data }) => data.data);
-}
-
-function getMinGraphValue(records: IWeightRecord[]) {
-  return (
-    records.reduce((prev, current) =>
-      Math.min(prev.weight) < Math.min(current.weight) ? prev : current
-    ).weight - 10
-  );
-}
-
-function getMaxGraphValue(records: IWeightRecord[]) {
-  return (
-    records.reduce((prev, current) =>
-      Math.min(prev.weight) > Math.min(current.weight) ? prev : current
-    ).weight - 10
-  );
 }
 
 const weightValidationSchema = yup.object({
@@ -229,5 +181,20 @@ const weightFields: IField[] = [
     step: ".01",
   },
 ];
+
+const Content = styled("div", {
+  containerType: "inline-size",
+  containerName: "weight-content",
+});
+
+const CardWrapper = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  pt: "$8",
+
+  "@container weight-content (min-width: 980px)": {
+    flexDirection: "row",
+  },
+});
 
 export default WeightTrackerPage;

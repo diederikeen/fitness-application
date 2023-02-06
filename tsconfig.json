@@ -28,6 +28,9 @@
       "@/components/*": [
         "components/*"
       ],
+      "@/features/*": [
+        "features/*"
+      ],
       "@/libs/*": [
         "libs/*"
       ],
