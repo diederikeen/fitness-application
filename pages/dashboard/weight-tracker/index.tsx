@@ -84,6 +84,9 @@ function WeightTrackerPage() {
       ? new Date(lastItem.date).getDay() === new Date().getDay()
       : false;
 
+  const lowestGraphValue = hasRecords ? getMinGraphValue(records) : 0;
+  const highestGraphValue = hasRecords ? getMaxGraphValue(records) : 0;
+
   return (
     <ProtectedDashboard>
       <Box css={{ maxWidth: "770px" }}>
@@ -112,7 +115,11 @@ function WeightTrackerPage() {
                   data={weightRecordMap(records)}
                   margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
-                  <YAxis domain={[75, 85]} tickLine={false} width={0} />
+                  <YAxis
+                    domain={[lowestGraphValue, highestGraphValue]}
+                    tickLine={false}
+                    width={0}
+                  />
                   <Tooltip />
                   <Line
                     type="monotone"
@@ -192,6 +199,22 @@ async function addWeightRecord(weight: number) {
       weight,
     })
     .then(({ data }) => data.data);
+}
+
+function getMinGraphValue(records: IWeightRecord[]) {
+  return (
+    records.reduce((prev, current) =>
+      Math.min(prev.weight) < Math.min(current.weight) ? prev : current
+    ).weight - 10
+  );
+}
+
+function getMaxGraphValue(records: IWeightRecord[]) {
+  return (
+    records.reduce((prev, current) =>
+      Math.min(prev.weight) > Math.min(current.weight) ? prev : current
+    ).weight - 10
+  );
 }
 
 const weightValidationSchema = yup.object({

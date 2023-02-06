@@ -91,12 +91,7 @@ export function WeightRecordListItem({ record, onDeleteClick }: Props) {
           </>
         ) : (
           <>
-            <Button
-              ghost
-              small
-              css={{ mr: "$3" }}
-              onClick={() => setIsEditMode(true)}
-            >
+            <Button ghost small onClick={() => setIsEditMode(true)}>
               <UilPen />
             </Button>
 
