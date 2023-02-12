@@ -32,14 +32,15 @@ function WeightTrackerPage() {
     },
     validateOnBlur: true,
     validationSchema: weightValidationSchema,
-    onSubmit: async (values) =>
-      await addWeightRecord(parseFloat(values.weight)).then(async () => {
-        addToast({
-          message: "Weight record successfully added",
-          state: "success",
-        });
-        return await queryClient.invalidateQueries("weight");
-      }),
+    onSubmit: async (values) => {
+      await addWeightRecord(parseFloat(values.weight));
+      await queryClient.invalidateQueries("weight");
+
+      addToast({
+        message: "Weight record successfully added",
+        state: "success",
+      });
+    },
   });
 
   const { data: records, isFetched } = useQuery(
@@ -146,7 +147,6 @@ function WeightTrackerPage() {
             }}
           >
             <h3>List</h3>
-
             {hasRecords &&
               sortedRecords.reverse().map((record) => (
                 <WeightRecordListItem
@@ -175,11 +175,11 @@ function sortOnDate(a: Date, b: Date) {
 }
 
 async function addWeightRecord(weight: number) {
-  return await axios
-    .post("/api/weight/add-weight", {
-      weight,
-    })
-    .then(({ data }) => data.data);
+  const record = await axios.post("/api/weight/add-weight", {
+    weight,
+  });
+
+  return record.data;
 }
 
 const weightValidationSchema = yup.object({
