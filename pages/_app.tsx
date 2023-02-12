@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import { AuthProvider } from "@/utils/useAuth/useAuth";
+import { ToastProvider } from "@/utils/useToast/useToast";
 
 export const inter = Inter({ subsets: ["latin"] });
 export const alegreya = Alegreya({ weight: ["400", "500", "700"] });
@@ -41,9 +42,11 @@ export default function App({ Component, pageProps }: AppProps) {
   globalStyles();
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Component {...pageProps} />
-      </AuthProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <Component {...pageProps} />
+        </AuthProvider>
+      </ToastProvider>
     </QueryClientProvider>
   );
 }
