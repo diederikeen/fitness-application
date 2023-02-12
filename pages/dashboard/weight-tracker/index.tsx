@@ -15,9 +15,11 @@ import { WeightRecordListItem } from "@/features/weight-tracker/WeightRecordList
 import { MAX_MAIN_CARD_SIZE, styled } from "@/styles/theme";
 import { IWeightRecord } from "@/utils/types";
 import { useAuth } from "@/utils/useAuth/useAuth";
+import { useToast } from "@/utils/useToast/useToast";
 
 function WeightTrackerPage() {
   const { user } = useAuth();
+  const { addToast } = useToast();
   const [selectedRecord, setSelectedRecord] = useState<
     IWeightRecord | undefined
   >(undefined);
@@ -31,17 +33,22 @@ function WeightTrackerPage() {
     validateOnBlur: true,
     validationSchema: weightValidationSchema,
     onSubmit: async (values) =>
-      await addWeightRecord(parseFloat(values.weight)).then(
-        async () => await queryClient.invalidateQueries("weight")
-      ),
+      await addWeightRecord(parseFloat(values.weight)).then(async () => {
+        addToast({
+          message: "Weight record successfully added",
+          state: "success",
+        });
+        return await queryClient.invalidateQueries("weight");
+      }),
   });
 
   const { data: records, isFetched } = useQuery(
     ["weight"],
-    async (): Promise<IWeightRecord[]> =>
-      await axios
+    async (): Promise<IWeightRecord[]> => {
+      return await axios
         .get("/api/weight/get-weight")
-        .then(async ({ data }) => await Promise.resolve(data.records)),
+        .then(({ data }) => data.records);
+    },
     {
       enabled: user !== undefined,
     }
@@ -52,7 +59,13 @@ function WeightTrackerPage() {
       await axios.post("/api/weight/delete-weight", {
         weightId,
       }),
-    onSuccess: async () => await queryClient.invalidateQueries("weight"),
+    onSuccess: async () => {
+      addToast({
+        message: "Weight record successfully deleted",
+        state: "success",
+      });
+      return await queryClient.invalidateQueries("weight");
+    },
   });
 
   function closeModal() {

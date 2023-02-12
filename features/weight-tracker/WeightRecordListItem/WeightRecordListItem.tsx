@@ -10,30 +10,15 @@ import { Button } from "@/components/Button/Button";
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { Typography } from "@/components/Typography/Typography";
 import { IWeightRecord } from "@/utils/types";
+import { useToast } from "@/utils/useToast/useToast";
 
 interface Props {
   record: IWeightRecord;
   onDeleteClick: () => void;
 }
 
-const validationSchema = yup.object({
-  weight: yup.number().required(),
-});
-
-async function updateWeight(
-  id: IWeightRecord["id"],
-  weight: IWeightRecord["id"],
-  cb: () => void
-) {
-  return await axios
-    .post("/api/weight/update-weight", {
-      id,
-      weight,
-    })
-    .then(() => cb());
-}
-
 export function WeightRecordListItem({ record, onDeleteClick }: Props) {
+  const { addToast } = useToast();
   const [isEditMode, setIsEditMode] = useState(false);
   const queryClient = useQueryClient();
 
@@ -42,10 +27,13 @@ export function WeightRecordListItem({ record, onDeleteClick }: Props) {
       weight: record.weight,
     },
     validationSchema,
-    onSubmit: async (values) =>
-      await updateWeight(record.id, values.weight, () =>
-        setIsEditMode(false)
-      ).then(async () => await queryClient.invalidateQueries("weight")),
+    onSubmit: async (values) => {
+      await updateWeight(record.id, values.weight);
+      await queryClient.invalidateQueries("weight");
+
+      setIsEditMode(false);
+      addToast({ message: "Record successfully updated", state: "success" });
+    },
   });
 
   return (
@@ -62,35 +50,44 @@ export function WeightRecordListItem({ record, onDeleteClick }: Props) {
         },
       }}
     >
-      <Box as="span" css={{ display: "flex", flexDirection: "column" }}>
-        {isEditMode ? (
+      {isEditMode ? (
+        <>
           <FormikProvider value={formik}>
             <FormComposer
               fields={fields}
               customSubmitButton={true}
             ></FormComposer>
+
+            <Box css={{ ml: "auto", display: "flex" }}>
+              <Button ghost small onClick={() => setIsEditMode(false)}>
+                <UilTimes />
+              </Button>
+              <Button
+                ghost
+                small
+                type="submit"
+                css={{ color: "$success" }}
+                // TODO: find nicer way of doing this
+                // @ts-expect-error
+                onClick={formik.handleSubmit}
+              >
+                <UilCheck />
+              </Button>
+            </Box>
           </FormikProvider>
-        ) : (
-          <Typography as="strong" css={{ display: "block" }}>
-            {record.weight}KG
-          </Typography>
-        )}
-        <Typography css={{ color: "$grey400" }}>
-          {new Intl.DateTimeFormat("nl-NL").format(new Date(record.date))}
-        </Typography>
-      </Box>
-      <Box css={{ ml: "auto" }}>
-        {isEditMode ? (
-          <>
-            <Button ghost small onClick={() => setIsEditMode(false)}>
-              <UilTimes />
-            </Button>
-            <Button ghost small type="submit" css={{ color: "$success" }}>
-              <UilCheck />
-            </Button>
-          </>
-        ) : (
-          <>
+        </>
+      ) : (
+        <>
+          <Box as="span" css={{ display: "flex", flexDirection: "column" }}>
+            <Typography as="strong" css={{ display: "block" }}>
+              {record.weight}KG
+            </Typography>
+            <Typography css={{ color: "$grey400" }}>
+              {new Intl.DateTimeFormat("nl-NL").format(new Date(record.date))}
+            </Typography>
+          </Box>
+
+          <Box css={{ ml: "auto" }}>
             <Button ghost small onClick={() => setIsEditMode(true)}>
               <UilPen />
             </Button>
@@ -103,11 +100,25 @@ export function WeightRecordListItem({ record, onDeleteClick }: Props) {
             >
               <UilTrash />
             </Button>
-          </>
-        )}
-      </Box>
+          </Box>
+        </>
+      )}
     </Box>
   );
+}
+
+const validationSchema = yup.object({
+  weight: yup.number().required(),
+});
+
+async function updateWeight(
+  id: IWeightRecord["id"],
+  weight: IWeightRecord["id"]
+) {
+  return await axios.post("/api/weight/update-weight", {
+    id,
+    weight,
+  });
 }
 
 const fields: IField[] = [
