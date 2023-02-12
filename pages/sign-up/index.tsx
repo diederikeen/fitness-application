@@ -6,28 +6,13 @@ import { AccountInformation } from "@/features/sign-up/accountInformation/Accoun
 import { PersonalInformation } from "@/features/sign-up/personalInformation/PersonalInformation";
 import { styled } from "@/styles/theme";
 
-interface Props {
-  onSuccess: () => void;
-}
-
-const FLOW_MAP: Record<number, ({ onSuccess }: Props) => JSX.Element> = {
-  0: AccountInformation,
-  1: PersonalInformation,
-};
-
 const auth = getAuth();
 
 function SignUpPage() {
   const { currentUser } = auth;
 
   const initialStep = currentUser === null ? 0 : 1;
-  const [step, setStep] = useState(initialStep);
-
-  const StepComponent = FLOW_MAP[step];
-
-  function onSuccess() {
-    return step === 0 ? setStep(1) : null;
-  }
+  const [currentStep, setCurrentStep] = useState(initialStep);
 
   return (
     <Layout>
@@ -42,7 +27,12 @@ function SignUpPage() {
               exercises tailored to your fitness level and interests.
             </p>
           </Box>
-          <StepComponent onSuccess={onSuccess} />
+          {currentStep === 0 && (
+            <AccountInformation
+              onSuccess={() => setCurrentStep((prev) => prev + 1)}
+            />
+          )}
+          {currentStep === 1 && <PersonalInformation />}
         </Box>
       </div>
       <VisualSection>

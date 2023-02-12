@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { FormikProvider, useFormik } from "formik";
+import { useRouter } from "next/router";
 import * as Yup from "yup";
 
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
@@ -10,13 +11,10 @@ import {
   IUserSignUpFormValues,
 } from "@/utils/types";
 
-interface Props {
-  onSuccess: () => void;
-}
-
 const auth = getAuth();
 
-export function PersonalInformation({ onSuccess }: Props) {
+export function PersonalInformation() {
+  const router = useRouter();
   // accessing currentUser from auth from the first step
   // see AccountInformation.tsx
   const currentUser = auth.currentUser as IFirebaseUser;
@@ -42,11 +40,13 @@ export function PersonalInformation({ onSuccess }: Props) {
         throw new Error("User email not found");
       }
 
-      return await onSignupSubmit(values, {
+      await onSignupSubmit(values, {
         uid: currentUser?.uid,
         photoUrl: currentUser?.photoURL,
         email: currentUser?.email,
       });
+
+      await router.push("/dashboard");
     },
   });
 
@@ -66,6 +66,7 @@ async function onSignupSubmit(
       userDetails: formValues,
       user,
     })
+    .then((res) => res)
     .catch((error) => console.error(error));
 }
 
