@@ -41,25 +41,9 @@ async function submitSignUpForm(
   values: Yup.InferType<typeof signUpValidationSchema>,
   successCallback: () => void
 ) {
-  return await createUserWithEmailAndPassword(
-    auth,
-    values.email,
-    values.password
-  )
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      // @TODO: Create api call to own database and write user
-      // in here we create a new user in our own database
-      successCallback();
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
+  await createUserWithEmailAndPassword(auth, values.email, values.password);
 
-      // @TODO: Create notification component
-      console.log({ errorCode, errorMessage });
-    });
+  successCallback();
 }
 
 const signUpValidationSchema = Yup.object({
@@ -75,14 +59,12 @@ const signupFormFields: IField[] = [
     name: "email",
     type: "email",
     label: "E-mail",
-    layout: "half",
   },
 
   {
     name: "password",
     type: "password",
     label: "Password",
-    layout: "half",
   },
 
   {
