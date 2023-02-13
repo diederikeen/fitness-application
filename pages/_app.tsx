@@ -29,6 +29,7 @@ const globalStyles = globalCss({
     lineHeight: "$4",
     fontSize: "$3",
     color: "$textDefault",
+    transition: "color 125ms ease",
   },
 });
 

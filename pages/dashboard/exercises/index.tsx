@@ -1,5 +1,6 @@
 import { UilPlus } from "@iconscout/react-unicons";
 import { FormikProvider, useFormik } from "formik";
+import Link from "next/link";
 import { useState } from "react";
 import z from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
@@ -11,7 +12,7 @@ import { Dialog } from "@/components/Dialog/Dialog";
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDashboard";
 import { Typography } from "@/components/Typography/Typography";
-import { MAX_MAIN_CARD_SIZE } from "@/styles/theme";
+import { MAX_MAIN_CARD_SIZE, styled } from "@/styles/theme";
 
 // Todo: Get these out of a data base
 const PLACEHOLDER_FOLDERS = [
@@ -60,7 +61,12 @@ function ExercisesPage() {
   return (
     <ProtectedDashboard>
       <>
-        <Box css={{ display: "flex", alignItems: "center" }}>
+        <Box
+          css={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
           <Typography as="h1">Exercise library</Typography>
 
           <Button
@@ -88,32 +94,56 @@ function ExercisesPage() {
 
         <Box
           css={{
-            marginTop: "$9",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "$2",
+            containerType: "inline-size",
+            containerName: "folder-overview",
+            marginTop: "$8",
           }}
         >
-          {PLACEHOLDER_FOLDERS.map((folder) => (
-            <Card
-              key={folder.id}
-              css={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Typography css={{ fontWeight: "bold" }}>
-                {folder.name}
-              </Typography>
+          <Typography as="h2" css={{ mb: "$4", fontSize: "$6" }}>
+            Folders
+          </Typography>
+          <Box
+            css={{
+              display: "grid",
+              gap: "$2",
+              gridTemplateColumns: "repeat(1, 1fr)",
 
-              <Typography css={{ fontSize: "$2", color: "$grey400", mt: "$3" }}>
-                Number of exercises:{" "}
-                <strong>({folder.exercises.length})</strong>
-              </Typography>
-            </Card>
-          ))}
+              "@container folder-overview (min-width: 600px)": {
+                gridTemplateColumns: "repeat(2, 1fr)",
+              },
+
+              "@container folder-overview (min-width: 900px)": {
+                gridTemplateColumns: "repeat(4, 1fr)",
+              },
+            }}
+          >
+            {PLACEHOLDER_FOLDERS.map((folder) => (
+              <StyledLink href={`./exercises/${folder.id}`} key={folder.id}>
+                <Card
+                  css={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Typography
+                    css={{ fontWeight: "bold" }}
+                    className="folder-title"
+                  >
+                    {folder.name}
+                  </Typography>
+
+                  <Typography
+                    css={{ fontSize: "$2", color: "$grey400", mt: "0" }}
+                  >
+                    Number of exercises:{" "}
+                    <strong>({folder.exercises.length})</strong>
+                  </Typography>
+                </Card>
+              </StyledLink>
+            ))}
+          </Box>
         </Box>
 
         <Dialog.Root
@@ -145,5 +175,13 @@ const folderPayloadSchema = z.object({
 });
 
 function handleFormSubmit(values: z.infer<typeof folderPayloadSchema>) {}
+
+const StyledLink = styled(Link, {
+  textDecoration: "none",
+
+  "&:hover .folder-title": {
+    color: "$secondaryColor",
+  },
+});
 
 export default ExercisesPage;

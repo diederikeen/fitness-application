@@ -6,15 +6,17 @@ import { styled } from "@/styles/theme";
 interface Props {
   as?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "strong" | "italic";
   css?: CSS;
+  className?: string;
 }
 
 export function Typography({
   as = "p",
   css,
   children,
+  ...rest
 }: PropsWithChildren<Props>) {
   return (
-    <StyledComponent css={{ ...css }} as={as}>
+    <StyledComponent css={{ ...css }} as={as} {...rest}>
       {children}
     </StyledComponent>
   );
