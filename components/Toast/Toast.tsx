@@ -57,7 +57,7 @@ const StyledToast = styled("div", {
   display: "flex",
   alignItems: "center",
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+  animation: `${overlayShow} 350ms cubic-bezier(0.16, 1, 0.3, 1)`,
 
   "> span": {
     width: "25px",
