@@ -1,12 +1,14 @@
 import { signInWithEmailAndPassword } from "@firebase/auth";
 import { FormikProvider, useFormik } from "formik";
 import { useRouter } from "next/router";
-import * as Yup from "yup";
+import z from "zod";
+import { toFormikValidationSchema } from "zod-formik-adapter";
 
 import { Box } from "@/components/Box/Box";
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { auth } from "@/libs/firebase";
 import { styled } from "@/styles/theme";
+import { useToast } from "@/utils/useToast/useToast";
 
 function LoginPage() {
   const router = useRouter();
@@ -21,7 +23,7 @@ function LoginPage() {
       password: "",
     },
     validateOnBlur: true,
-    validationSchema: loginValidationSchema,
+    validationSchema: toFormikValidationSchema(loginValidationSchema),
     onSubmit: async (values) => await onLoginSubmit(values, onLoginSuccess),
   });
 
@@ -50,23 +52,21 @@ function LoginPage() {
 }
 
 async function onLoginSubmit(
-  values: Yup.InferType<typeof loginValidationSchema>,
+  values: z.infer<typeof loginValidationSchema>,
   onLoginSuccess: () => Promise<boolean>
 ) {
   return await signInWithEmailAndPassword(auth, values.email, values.password)
-    .then(async (userCredential) => {
-      const user = userCredential.user;
-      await onLoginSuccess();
-    })
+    .then(async () => await onLoginSuccess())
     .catch((error) => {
-      const errorCode = error.code;
+      const { addToast } = useToast();
       const errorMessage = error.message;
+      addToast({ message: errorMessage });
     });
 }
 
-const loginValidationSchema = Yup.object({
-  email: Yup.string().email().required(),
-  password: Yup.string().required().min(8),
+const loginValidationSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
 });
 
 const loginFormFields: IField[] = [
