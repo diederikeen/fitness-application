@@ -18,7 +18,7 @@ export interface IUserPayload {
 }
 
 export interface IWeightRecord {
-  date: Date;
+  date: string;
   weight: number;
   note?: string;
   id: number;

@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { FormikProvider, useFormik } from "formik";
-import * as Yup from "yup";
+import z from "zod";
+import { toFormikValidationSchema } from "zod-formik-adapter";
 
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 
@@ -10,6 +11,19 @@ interface Props {
   onSuccess: () => void;
 }
 
+const accountInformationSchema = z
+  .object({
+    email: z.string().email("This doesn't look like an email"),
+    password: z.string().min(6, {
+      message: "Password should be a minimal of 6 characters",
+    }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.confirmPassword === data.password, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
 export function AccountInformation({ onSuccess }: Props) {
   const formik = useFormik({
     initialValues: {
@@ -17,9 +31,7 @@ export function AccountInformation({ onSuccess }: Props) {
       password: "",
       confirmPassword: "",
     },
-    validateOnBlur: true,
-    validateOnChange: false,
-    validationSchema: signUpValidationSchema,
+    validationSchema: toFormikValidationSchema(accountInformationSchema),
     onSubmit: async (values) => await onSignupSubmit(values, onSuccess),
   });
 
@@ -31,28 +43,20 @@ export function AccountInformation({ onSuccess }: Props) {
 }
 
 async function onSignupSubmit(
-  values: Yup.InferType<typeof signUpValidationSchema>,
+  values: z.infer<typeof accountInformationSchema>,
   onSuccess: Props["onSuccess"]
 ) {
   return await submitSignUpForm(values, onSuccess);
 }
 
 async function submitSignUpForm(
-  values: Yup.InferType<typeof signUpValidationSchema>,
+  values: z.infer<typeof accountInformationSchema>,
   successCallback: () => void
 ) {
   await createUserWithEmailAndPassword(auth, values.email, values.password);
 
   successCallback();
 }
-
-const signUpValidationSchema = Yup.object({
-  email: Yup.string().email().required(),
-  password: Yup.string().required().min(8),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords don't match")
-    .required(),
-});
 
 const signupFormFields: IField[] = [
   {
