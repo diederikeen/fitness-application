@@ -57,6 +57,7 @@ export function RecordList({ records }: Props) {
         css={{
           maxWidth: MAX_MAIN_CARD_SIZE,
           mt: "$4",
+          pb: "0",
           "@container weight-content (min-width: 980px)": {
             mt: "0",
             ml: "$6",
