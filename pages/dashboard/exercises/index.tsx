@@ -1,7 +1,9 @@
 import { UilPlus } from "@iconscout/react-unicons";
+import axios from "axios";
 import { FormikProvider, useFormik } from "formik";
 import Link from "next/link";
 import { useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import z from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 
@@ -14,49 +16,25 @@ import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDas
 import { Typography } from "@/components/Typography/Typography";
 import { MAX_MAIN_CARD_SIZE, styled } from "@/styles/theme";
 
-// Todo: Get these out of a data base
-const PLACEHOLDER_FOLDERS = [
-  {
-    id: 0,
-    name: "Back day",
-    exercises: [
-      {
-        id: 0,
-        name: "Pull up",
-      },
-    ],
-  },
-  {
-    id: 1,
-    name: "Chest day",
-    exercises: [
-      {
-        id: 0,
-        name: "Bench press",
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "Leg day",
-    exercises: [
-      {
-        id: 0,
-        name: "Back squat",
-      },
-    ],
-  },
-];
-
 function ExercisesPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const queryClient = useQueryClient();
+
   const formik = useFormik({
     initialValues: {
       name: "",
     },
     validationSchema: toFormikValidationSchema(folderPayloadSchema),
-    onSubmit: (values) => handleFormSubmit(values),
+    onSubmit: async (values) => {
+      await handleFormSubmit(values);
+      await queryClient.invalidateQueries(["folders"]);
+    },
   });
+
+  const { data: folders, isLoading } = useQuery(
+    ["folders"],
+    async () => await fetchFolders()
+  );
 
   return (
     <ProtectedDashboard>
@@ -117,8 +95,12 @@ function ExercisesPage() {
               },
             }}
           >
-            {PLACEHOLDER_FOLDERS.map((folder) => (
-              <StyledLink href={`./exercises/${folder.id}`} key={folder.id}>
+            {isLoading && <Typography>Getting your folders.</Typography>}
+            {folders?.map((folder) => (
+              <StyledLink
+                href={`./exercises/folders/${folder.id}`}
+                key={folder.id}
+              >
                 <Card
                   css={{
                     display: "flex",
@@ -174,7 +156,26 @@ const folderPayloadSchema = z.object({
   name: z.string(),
 });
 
-function handleFormSubmit(values: z.infer<typeof folderPayloadSchema>) {}
+async function handleFormSubmit(values: z.infer<typeof folderPayloadSchema>) {
+  return await axios.post("/api/folder/create-folder", { ...values });
+}
+
+const folderResponseSchema = z.array(
+  z.object({
+    name: z.string(),
+    id: z.number(),
+    exercises: z.array(
+      z.object({
+        name: z.string(),
+      })
+    ),
+  })
+);
+
+async function fetchFolders() {
+  const folders = await axios.get("/api/folder/get-folders");
+  return folderResponseSchema.parse(folders.data.folders);
+}
 
 const StyledLink = styled(Link, {
   textDecoration: "none",

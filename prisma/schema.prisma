@@ -19,6 +19,8 @@ model User {
   country       	String?
   uid							String				@unique
   weight					Weight[]
+  exercises				Exercise[]
+  folders					Folder[]
 }
 
 model Weight {
@@ -28,4 +30,21 @@ model Weight {
 	date DateTime @default(now())
 	note String?
 	user User @relation(fields: [uid], references: [uid])
+}
+
+model Folder {
+	id Int @unique @default(autoincrement())
+	uid String
+	name String
+	user User @relation(fields: [uid], references: [uid])
+	exercises Exercise[]
+}
+
+model Exercise {
+	id Int @unique @default(autoincrement())
+	uid String
+	user User @relation(fields: [uid], references: [uid])
+	name String
+	folder_id Int?
+	folder Folder? @relation(fields: [folder_id], references: [id])
 }
