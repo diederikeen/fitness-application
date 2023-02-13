@@ -14,9 +14,10 @@ import { useToast } from "@/utils/useToast/useToast";
 
 interface Props {
   records: IWeightRecord[];
+  hasRecords: boolean;
 }
 
-export function GraphCard({ records }: Props) {
+export function GraphCard({ records, hasRecords }: Props) {
   const queryClient = useQueryClient();
   const { addToast } = useToast();
 
@@ -37,7 +38,7 @@ export function GraphCard({ records }: Props) {
     },
   });
 
-  const lastItem = records.length > 0 ? records[records.length - 1] : undefined;
+  const lastItem = hasRecords ? records[records.length - 1] : undefined;
 
   const isButtonDisabled =
     lastItem !== undefined
@@ -46,13 +47,17 @@ export function GraphCard({ records }: Props) {
 
   return (
     <Card css={{ flexGrow: 1, maxWidth: MAX_MAIN_CARD_SIZE }}>
-      <h3>Graph</h3>
+      {hasRecords && (
+        <>
+          <h3>Graph</h3>
 
-      <Box css={{ mt: "$5" }}>
-        <LineGraph data={records} dataKey="weight" />
-      </Box>
+          <Box css={{ mt: "$5" }}>
+            <LineGraph data={records} dataKey="weight" />
+          </Box>
+        </>
+      )}
 
-      <Box css={{ mt: "$5" }}>
+      <Box css={{ mt: hasRecords ? "$5" : "0" }}>
         <FormikProvider value={formik}>
           <FormComposer
             inline

@@ -43,12 +43,11 @@ function WeightTrackerPage() {
       </Box>
 
       <Content>
-        {hasRecords && (
-          <CardWrapper>
-            <GraphCard records={sortedRecords} />
-            <RecordList records={sortedRecords} />
-          </CardWrapper>
-        )}
+        <CardWrapper>
+          <GraphCard records={sortedRecords} hasRecords={hasRecords} />
+
+          {hasRecords && <RecordList records={sortedRecords} />}
+        </CardWrapper>
       </Content>
     </ProtectedDashboard>
   );
