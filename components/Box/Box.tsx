@@ -6,7 +6,7 @@ import { styled } from "@/styles/theme";
 const StyledBox = styled("div", {});
 
 interface Props {
-  as?: "div" | "span";
+  as?: "div" | "span" | "nav";
   css: CSS;
   className?: string;
 }

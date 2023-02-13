@@ -30,10 +30,6 @@ const globalStyles = globalCss({
     fontSize: "$3",
     color: "$textDefault",
   },
-
-  span: {
-    color: "$textDefault",
-  },
 });
 
 const queryClient = new QueryClient();
