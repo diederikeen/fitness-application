@@ -15,10 +15,12 @@ import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDashboard";
 import { Typography } from "@/components/Typography/Typography";
 import { MAX_MAIN_CARD_SIZE, styled } from "@/styles/theme";
+import { useToast } from "@/utils/useToast/useToast";
 
 function ExercisesPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const queryClient = useQueryClient();
+  const { addToast } = useToast();
 
   const formik = useFormik({
     initialValues: {
@@ -28,6 +30,8 @@ function ExercisesPage() {
     onSubmit: async (values) => {
       await handleFormSubmit(values);
       await queryClient.invalidateQueries(["folders"]);
+      setIsDialogOpen(false);
+      addToast({ message: "Folder created successfully", state: "success" });
     },
   });
 

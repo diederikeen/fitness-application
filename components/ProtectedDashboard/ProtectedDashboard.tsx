@@ -1,21 +1,29 @@
 import { useRouter } from "next/navigation";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 
 import { styled } from "@/styles/theme";
+import { ICreatedUser } from "@/utils/types";
 import { useAuth } from "@/utils/useAuth/useAuth";
 
 import Masthead from "../Masthead/Masthead";
 import Navigation from "../Navigation/Navigation";
 
 export function ProtectedDashboard({ children }: PropsWithChildren) {
-  const { user, isFetched } = useAuth();
+  const { user: authUser, isFetched } = useAuth();
+  const [user, setUser] = useState<ICreatedUser | undefined>(authUser);
   const router = useRouter();
 
-  if (isFetched && user === undefined) {
+  useEffect(() => {
+    if (user === undefined) {
+      setUser(authUser);
+    }
+  }, [isFetched, authUser]);
+
+  if (isFetched && authUser === undefined) {
     router.push("/login");
   }
 
-  if (user === undefined) {
+  if (user === undefined || user === null) {
     return null;
   }
 
