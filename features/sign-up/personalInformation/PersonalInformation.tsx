@@ -2,7 +2,8 @@ import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { FormikProvider, useFormik } from "formik";
 import { useRouter } from "next/router";
-import * as Yup from "yup";
+import z from "zod";
+import { toFormikValidationSchema } from "zod-formik-adapter";
 
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import {
@@ -34,7 +35,7 @@ export function PersonalInformation() {
     },
     validateOnBlur: true,
     validateOnChange: false,
-    validationSchema: personalInfoValidationSchema,
+    validationSchema: toFormikValidationSchema(personalInfoValidationSchema),
     onSubmit: async (values) => {
       if (currentUser.email === null) {
         throw new Error("User email not found");
@@ -110,11 +111,11 @@ const personalInfoFields: IField[][] = [
   ],
 ];
 
-const personalInfoValidationSchema = Yup.object({
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
-  zipcode: Yup.string().required("Zipcode is required"),
-  streetName: Yup.string().required("Street name is required"),
-  city: Yup.string().required("City is required"),
-  country: Yup.string().required("Country is required"),
+const personalInfoValidationSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  zipcode: z.string(),
+  streetName: z.string(),
+  city: z.string(),
+  country: z.string(),
 });

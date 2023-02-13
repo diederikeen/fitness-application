@@ -1,106 +1,35 @@
 import axios from "axios";
-import { FormikProvider, useFormik } from "formik";
-import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import * as yup from "yup";
+import { useQuery } from "react-query";
+import z from "zod";
 
 import { Box } from "@/components/Box/Box";
-import { Card } from "@/components/Card/Card";
-import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDashboard";
 import { Typography } from "@/components/Typography/Typography";
-import { DeleteRecordDialog } from "@/features/weight-tracker/DeleteRecordDialog/DeleteRecordDialog";
-import { WeightGraph } from "@/features/weight-tracker/WeightGraph/WeightGraph";
-import { WeightRecordListItem } from "@/features/weight-tracker/WeightRecordListItem/WeightRecordListItem";
+import { GraphCard } from "@/features/weight-tracker/GraphCard/GraphCard";
+import { RecordList } from "@/features/weight-tracker/RecordList/RecordList";
 import { MAX_MAIN_CARD_SIZE, styled } from "@/styles/theme";
-import { IWeightRecord } from "@/utils/types";
 import { useAuth } from "@/utils/useAuth/useAuth";
-import { useToast } from "@/utils/useToast/useToast";
 
 function WeightTrackerPage() {
   const { user } = useAuth();
-  const { addToast } = useToast();
-  const [selectedRecord, setSelectedRecord] = useState<
-    IWeightRecord | undefined
-  >(undefined);
-  const queryClient = useQueryClient();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const formik = useFormik({
-    initialValues: {
-      weight: "",
-    },
-    validateOnBlur: true,
-    validationSchema: weightValidationSchema,
-    onSubmit: async (values) => {
-      await addWeightRecord(parseFloat(values.weight));
-      await queryClient.invalidateQueries("weight");
-
-      addToast({
-        message: "Weight record successfully added",
-        state: "success",
-      });
-    },
-  });
 
   const { data: records, isFetched } = useQuery(
     ["weight"],
-    async (): Promise<IWeightRecord[]> => {
-      return await axios
-        .get("/api/weight/get-weight")
-        .then(({ data }) => data.records);
-    },
+    async () => await fetchRecords(),
+
     {
       enabled: user !== undefined,
     }
   );
 
-  const deleteWeightRecord = useMutation({
-    mutationFn: async (weightId: number) =>
-      await axios.post("/api/weight/delete-weight", {
-        weightId,
-      }),
-    onSuccess: async () => {
-      addToast({
-        message: "Weight record successfully deleted",
-        state: "success",
-      });
-      return await queryClient.invalidateQueries("weight");
-    },
-  });
-
-  function closeModal() {
-    setSelectedRecord(undefined);
-    setIsModalOpen(false);
-  }
-
-  function deleteRecord() {
-    if (selectedRecord === undefined) {
-      return;
-    }
-
-    deleteWeightRecord.mutate(selectedRecord.id);
-    setSelectedRecord(undefined);
-    setIsModalOpen(false);
-  }
-
   const hasRecords = isFetched && records !== undefined && records?.length > 0;
   const sortedRecords = hasRecords
     ? records?.sort((a, b) => sortOnDate(new Date(a.date), new Date(b.date)))
     : [];
-  const lastItem =
-    sortedRecords.length > 0
-      ? sortedRecords[sortedRecords.length - 1]
-      : undefined;
-
-  const isButtonDisabled =
-    lastItem !== undefined
-      ? new Date(lastItem.date).getDay() === new Date().getDay()
-      : false;
 
   return (
     <ProtectedDashboard>
-      <Box css={{ maxWidth: "770px" }}>
+      <Box css={{ maxWidth: MAX_MAIN_CARD_SIZE }}>
         <Typography as="h1">Body Weight</Typography>
         <Typography as="p">
           Tracking your body weight can provide valuable insights into your
@@ -114,86 +43,34 @@ function WeightTrackerPage() {
       </Box>
 
       <Content>
-        <CardWrapper>
-          <Card css={{ flexGrow: 1, maxWidth: MAX_MAIN_CARD_SIZE }}>
-            <h3>Graph</h3>
-
-            <Box css={{ mt: "$5" }}>
-              {hasRecords && <WeightGraph records={sortedRecords} />}
-            </Box>
-
-            <Box css={{ mt: "$5" }}>
-              <FormikProvider value={formik}>
-                <FormComposer
-                  inline
-                  fields={weightFields}
-                  buttonLabel="Add"
-                  isSubmitButtonDisabled={isButtonDisabled}
-                />
-              </FormikProvider>
-            </Box>
-          </Card>
-
-          <Card
-            css={{
-              maxWidth: MAX_MAIN_CARD_SIZE,
-              mt: "$4",
-              "@container weight-content (min-width: 980px)": {
-                mt: "0",
-                ml: "$6",
-                width: "100%",
-                maxWidth: "320px",
-              },
-            }}
-          >
-            <h3>List</h3>
-            {hasRecords &&
-              sortedRecords.reverse().map((record) => (
-                <WeightRecordListItem
-                  key={record.id}
-                  record={record}
-                  onDeleteClick={() => {
-                    setSelectedRecord(record);
-                    setIsModalOpen(true);
-                  }}
-                />
-              ))}
-          </Card>
-        </CardWrapper>
-        <DeleteRecordDialog
-          onClose={closeModal}
-          isDialogOpen={isModalOpen}
-          action={() => deleteRecord()}
-        />
+        {hasRecords && (
+          <CardWrapper>
+            <GraphCard records={sortedRecords} />
+            <RecordList records={sortedRecords} />
+          </CardWrapper>
+        )}
       </Content>
     </ProtectedDashboard>
   );
 }
 
+const recordsSchema = z.array(
+  z.object({
+    date: z.string(),
+    weight: z.number(),
+    id: z.number(),
+    note: z.string().optional(),
+  })
+);
+
+async function fetchRecords() {
+  const response = await axios.get("/api/weight/get-weight");
+  return recordsSchema.parse(response.data.records);
+}
+
 function sortOnDate(a: Date, b: Date) {
   return a.getTime() - b.getTime();
 }
-
-async function addWeightRecord(weight: number) {
-  const record = await axios.post("/api/weight/add-weight", {
-    weight,
-  });
-
-  return record.data;
-}
-
-const weightValidationSchema = yup.object({
-  weight: yup.number().required(),
-});
-
-const weightFields: IField[] = [
-  {
-    name: "weight",
-    type: "number",
-    label: "Today my weight is:",
-    step: ".01",
-  },
-];
 
 const Content = styled("div", {
   containerType: "inline-size",

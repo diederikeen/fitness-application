@@ -31,7 +31,9 @@
     "react-query": "^3.39.3",
     "recharts": "^2.3.2",
     "typescript": "4.9.4",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "zod": "^3.20.6",
+    "zod-formik-adapter": "^1.2.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.48.0",
