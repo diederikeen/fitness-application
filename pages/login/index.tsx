@@ -1,6 +1,6 @@
 import { signInWithEmailAndPassword } from "@firebase/auth";
 import { FormikProvider, useFormik } from "formik";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import z from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 
@@ -16,18 +16,18 @@ function LoginPage() {
 
   async function onLoginSubmit(
     values: z.infer<typeof loginValidationSchema>,
-    onLoginSuccess: () => Promise<boolean>
+    onLoginSuccess: () => void
   ) {
     return await signInWithEmailAndPassword(auth, values.email, values.password)
-      .then(async () => await onLoginSuccess())
+      .then(async () => onLoginSuccess())
       .catch((error) => {
         const errorMessage = error.message;
         addToast({ message: errorMessage, state: "error" });
       });
   }
 
-  async function onLoginSuccess() {
-    return await router.push("/dashboard");
+  function onLoginSuccess() {
+    return router.push("/dashboard");
   }
 
   const formik = useFormik({

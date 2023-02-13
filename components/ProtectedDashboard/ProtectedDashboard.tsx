@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
 
 import { styled } from "@/styles/theme";
@@ -12,7 +12,7 @@ export function ProtectedDashboard({ children }: PropsWithChildren) {
   const router = useRouter();
 
   if (isFetched && user === undefined) {
-    void router.push("/login");
+    router.push("/login");
   }
 
   if (user === undefined) {
