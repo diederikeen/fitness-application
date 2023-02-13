@@ -12,6 +12,19 @@ import { useToast } from "@/utils/useToast/useToast";
 
 function LoginPage() {
   const router = useRouter();
+  const { addToast } = useToast();
+
+  async function onLoginSubmit(
+    values: z.infer<typeof loginValidationSchema>,
+    onLoginSuccess: () => Promise<boolean>
+  ) {
+    return await signInWithEmailAndPassword(auth, values.email, values.password)
+      .then(async () => await onLoginSuccess())
+      .catch((error) => {
+        const errorMessage = error.message;
+        addToast({ message: errorMessage, state: "error" });
+      });
+  }
 
   async function onLoginSuccess() {
     return await router.push("/dashboard");
@@ -49,19 +62,6 @@ function LoginPage() {
       </VisualSection>
     </Layout>
   );
-}
-
-async function onLoginSubmit(
-  values: z.infer<typeof loginValidationSchema>,
-  onLoginSuccess: () => Promise<boolean>
-) {
-  return await signInWithEmailAndPassword(auth, values.email, values.password)
-    .then(async () => await onLoginSuccess())
-    .catch((error) => {
-      const { addToast } = useToast();
-      const errorMessage = error.message;
-      addToast({ message: errorMessage });
-    });
 }
 
 const loginValidationSchema = z.object({
