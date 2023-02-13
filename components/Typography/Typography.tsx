@@ -8,7 +8,11 @@ interface Props {
   css?: CSS;
 }
 
-export function Typography({ as, css, children }: PropsWithChildren<Props>) {
+export function Typography({
+  as = "p",
+  css,
+  children,
+}: PropsWithChildren<Props>) {
   return (
     <StyledComponent css={{ ...css }} as={as}>
       {children}
