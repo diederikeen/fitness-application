@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { FormikProvider, useFormik } from "formik";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import z from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 
@@ -47,7 +47,7 @@ export function PersonalInformation() {
         email: currentUser?.email,
       });
 
-      await router.push("/dashboard");
+      router.push("/dashboard");
     },
   });
 
