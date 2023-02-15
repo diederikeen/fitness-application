@@ -1,39 +1,22 @@
 import { UilPlus } from "@iconscout/react-unicons";
 import axios from "axios";
-import { FormikProvider, useFormik } from "formik";
 import Link from "next/link";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import z from "zod";
-import { toFormikValidationSchema } from "zod-formik-adapter";
 
 import { Box } from "@/components/Box/Box";
 import { Button } from "@/components/Button/Button";
 import { Card } from "@/components/Card/Card";
-import { Dialog } from "@/components/Dialog/Dialog";
-import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDashboard";
 import { Typography } from "@/components/Typography/Typography";
+import { ExerciseDialog } from "@/features/exercises/ExerciseDialog/ExerciseDialog";
+import { FolderDialog } from "@/features/exercises/FolderDialog/FolderDialog";
 import { MAX_MAIN_CARD_SIZE, styled } from "@/styles/theme";
-import { useToast } from "@/utils/useToast/useToast";
 
 function ExercisesPage() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const queryClient = useQueryClient();
-  const { addToast } = useToast();
-
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-    },
-    validationSchema: toFormikValidationSchema(folderPayloadSchema),
-    onSubmit: async (values) => {
-      await handleFormSubmit(values);
-      await queryClient.invalidateQueries(["folders"]);
-      setIsDialogOpen(false);
-      addToast({ message: "Folder created successfully", state: "success" });
-    },
-  });
+  const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
+  const [isExerciseDialogOpen, setIsExerciseDialogOpen] = useState(false);
 
   const { data: folders, isLoading } = useQuery(
     ["folders"],
@@ -54,16 +37,16 @@ function ExercisesPage() {
           <Button
             type="button"
             small
-            onClick={() => setIsDialogOpen(true)}
+            onClick={() => setIsExerciseDialogOpen(true)}
             css={{
               ml: "auto",
               display: "flex",
               alignItems: "center",
             }}
           >
-            Add new folder
+            Add new exercise
             <Box as="span" css={{ ml: "$2", color: "inherit", height: "24px" }}>
-              <UilPlus></UilPlus>
+              <UilPlus />
             </Box>
           </Button>
         </Box>
@@ -81,9 +64,31 @@ function ExercisesPage() {
             marginTop: "$8",
           }}
         >
-          <Typography as="h2" css={{ mb: "$4", fontSize: "$6" }}>
-            Folders
-          </Typography>
+          <Box css={{ display: "flex", alignItems: "center", mb: "$4" }}>
+            <Typography as="h2" css={{ fontSize: "$6" }}>
+              Folders
+            </Typography>
+
+            <Button
+              type="button"
+              small
+              ghost
+              onClick={() => setIsFolderDialogOpen(true)}
+              css={{
+                ml: "auto",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              Add new folder
+              <Box
+                as="span"
+                css={{ ml: "$2", color: "inherit", height: "24px" }}
+              >
+                <UilPlus />
+              </Box>
+            </Button>
+          </Box>
           <Box
             css={{
               display: "grid",
@@ -131,37 +136,17 @@ function ExercisesPage() {
             ))}
           </Box>
         </Box>
-
-        <Dialog.Root
-          onClose={() => setIsDialogOpen(false)}
-          isOpen={isDialogOpen}
-        >
-          <Typography css={{ mb: "$6" }} as="h2">
-            Add new folder
-          </Typography>
-          <FormikProvider value={formik}>
-            <FormComposer fields={fields} buttonLabel="Add folder" />
-          </FormikProvider>
-        </Dialog.Root>
+        <FolderDialog
+          closeDialog={() => setIsFolderDialogOpen(false)}
+          isDialogOpen={isFolderDialogOpen}
+        />
+        <ExerciseDialog
+          closeDialog={() => setIsExerciseDialogOpen(false)}
+          isDialogOpen={isExerciseDialogOpen}
+        />
       </>
     </ProtectedDashboard>
   );
-}
-
-const fields: IField[] = [
-  {
-    name: "name",
-    type: "text",
-    label: "Folder name",
-  },
-];
-
-const folderPayloadSchema = z.object({
-  name: z.string(),
-});
-
-async function handleFormSubmit(values: z.infer<typeof folderPayloadSchema>) {
-  return await axios.post("/api/folder/create-folder", { ...values });
 }
 
 const folderResponseSchema = z.array(
