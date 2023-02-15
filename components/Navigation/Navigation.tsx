@@ -37,16 +37,24 @@ function Navigation() {
 
   return (
     <StyledNavigation>
-      {NAV_ITEMS.map((item) => (
-        <StyledNavItem
-          key={item.path}
-          href={item.path}
-          isCurrent={asPath === item.path}
-          aria-current={asPath === item.path}
-        >
-          {item.icon} {item.label}
-        </StyledNavItem>
-      ))}
+      {NAV_ITEMS.map((item) => {
+        const isCurrent =
+          item.path === asPath ||
+          item.path.includes(
+            asPath.split("/").filter((item) => item !== "")[1]
+          );
+
+        return (
+          <StyledNavItem
+            key={item.path}
+            href={item.path}
+            isCurrent={isCurrent}
+            aria-current={isCurrent}
+          >
+            {item.icon} {item.label}
+          </StyledNavItem>
+        );
+      })}
     </StyledNavigation>
   );
 }
