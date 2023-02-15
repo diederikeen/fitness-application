@@ -1,16 +1,23 @@
 import { styled } from "@/styles/theme";
 import { ICreatedUser } from "@/utils/types";
 
-function getAvatar(photoUrl: string | null, firstName: string) {
+function getAvatar(
+  photoUrl: string | null,
+  firstName: string,
+  lastName: string
+) {
   return photoUrl !== null ? (
     <StyledAvatar css={{ backgroundImage: `url(${photoUrl})` }} />
   ) : (
-    <StyledInitials>{firstName.substring(0, 2)}</StyledInitials>
+    <StyledInitials>
+      {firstName.substring(0, 1)}
+      {lastName.substring(0, 1)}
+    </StyledInitials>
   );
 }
 
 function Masthead({ user }: { user: ICreatedUser }) {
-  const avatar = getAvatar(user?.photoUrl, user.firstName);
+  const avatar = getAvatar(user?.photoUrl, user.firstName, user.lastName);
   return (
     <StyledMasthead>
       <div className="content">
