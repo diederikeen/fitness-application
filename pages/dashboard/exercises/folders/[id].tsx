@@ -31,24 +31,22 @@ function ExerciseDetailPage({ folder }: Props) {
     <ProtectedDashboard>
       <Breadcrumbs currentPage={folder.name} />
 
-      <Box css={{ mt: "$8" }}>
-        <Typography as="h1">{folder.name}</Typography>
-        {hasExercises ? (
-          folder.exercises.map((exercise) => (
-            <span key={exercise.id}>{exercise.name}</span>
-          ))
-        ) : (
-          <>
-            <Typography>Looks like this folder is empty.</Typography>
-            <Button css={{ display: "flex", alignItems: "center" }}>
-              Add exercises
-              <Box as="span" css={{ height: "24px", ml: "$2" }}>
-                <UilPlus />
-              </Box>
-            </Button>
-          </>
-        )}
-      </Box>
+      <Typography as="h1">{folder.name}</Typography>
+      {hasExercises ? (
+        folder.exercises.map((exercise) => (
+          <span key={exercise.id}>{exercise.name}</span>
+        ))
+      ) : (
+        <>
+          <Typography>Looks like this folder is empty.</Typography>
+          <Button css={{ display: "flex", alignItems: "center" }}>
+            Add exercises
+            <Box as="span" css={{ height: "24px", ml: "$2" }}>
+              <UilPlus />
+            </Box>
+          </Button>
+        </>
+      )}
     </ProtectedDashboard>
   );
 }
