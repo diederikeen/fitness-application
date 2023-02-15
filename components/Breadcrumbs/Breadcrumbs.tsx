@@ -20,7 +20,13 @@ export function Breadcrumbs({ currentPage }: Props) {
         if (index === 0) {
           return (
             <StyledLink key={el} href={`/${base}`}>
-              <Box as="span" css={{ textDecoration: "underline" }}>
+              <Box
+                as="span"
+                css={{
+                  textDecoration: "underline",
+                  textTransform: "capitalize",
+                }}
+              >
                 {el}
               </Box>
             </StyledLink>
@@ -29,7 +35,10 @@ export function Breadcrumbs({ currentPage }: Props) {
 
         return (
           <StyledLink key={`/${base}/${el}`} href={`/${base}/${el}`}>
-            <Box as="span" css={{ textDecoration: "underline" }}>
+            <Box
+              as="span"
+              css={{ textDecoration: "underline", textTransform: "capitalize" }}
+            >
               {el}
             </Box>
           </StyledLink>
@@ -39,13 +48,12 @@ export function Breadcrumbs({ currentPage }: Props) {
         as="p"
         css={{
           m: 0,
-          ml: "$1",
           fontSize: "$2",
           color: "$grey400",
           textDecoration: "none",
         }}
       >
-        {currentPage.toLowerCase()}
+        {currentPage}
       </Typography>
     </Box>
   );
@@ -65,5 +73,6 @@ const StyledLink = styled(Link, {
 
   "&:after": {
     content: " / ",
+    mr: "$1",
   },
 });
