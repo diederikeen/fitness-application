@@ -1,4 +1,4 @@
-import { initializeApp } from "@firebase/app";
+import { FirebaseApp, getApp, getApps, initializeApp } from "@firebase/app";
 import { getAuth } from "@firebase/auth";
 
 export const firebaseConfig = {
@@ -12,5 +12,11 @@ export const firebaseConfig = {
   measurementId: process.env.FB_MEASUREMENT_ID,
 };
 
-export const firebaseApp = initializeApp(firebaseConfig);
+export let firebaseApp: FirebaseApp | undefined;
+if (getApps().length < 1) {
+  firebaseApp = initializeApp(firebaseConfig);
+} else {
+  firebaseApp = getApp();
+}
+
 export const auth = getAuth(firebaseApp);
