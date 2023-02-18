@@ -1,18 +1,17 @@
 import { UilPlus } from "@iconscout/react-unicons";
 import axios from "axios";
-import Link from "next/link";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import z from "zod";
 
 import { Box } from "@/components/Box/Box";
 import { Button } from "@/components/Button/Button";
-import { Card } from "@/components/Card/Card";
 import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDashboard";
 import { Typography } from "@/components/Typography/Typography";
 import { ExerciseDialog } from "@/features/exercises/ExerciseDialog/ExerciseDialog";
 import { FolderDialog } from "@/features/exercises/FolderDialog/FolderDialog";
-import { MAX_MAIN_CARD_SIZE, styled } from "@/styles/theme";
+import { FolderOverview } from "@/features/exercises/FolderOverview/FolderOverview";
+import { MAX_MAIN_CARD_SIZE } from "@/styles/theme";
 
 import { IFolder } from "./folders/[id]";
 
@@ -91,52 +90,9 @@ function ExercisesPage() {
               </Box>
             </Button>
           </Box>
-          <Box
-            css={{
-              display: "grid",
-              gap: "$2",
-              gridTemplateColumns: "repeat(1, 1fr)",
-
-              "@container folder-overview (min-width: 600px)": {
-                gridTemplateColumns: "repeat(2, 1fr)",
-              },
-
-              "@container folder-overview (min-width: 900px)": {
-                gridTemplateColumns: "repeat(4, 1fr)",
-              },
-            }}
-          >
-            {isLoading && <Typography>Getting your folders.</Typography>}
-            {folders?.map((folder) => (
-              <StyledLink
-                href={`./exercises/folders/${folder.id}`}
-                key={folder.id}
-              >
-                <Card
-                  css={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Typography
-                    css={{ fontWeight: "bold" }}
-                    className="folder-title"
-                  >
-                    {folder.name}
-                  </Typography>
-
-                  <Typography
-                    css={{ fontSize: "$2", color: "$grey400", mt: "0" }}
-                  >
-                    Number of exercises:{" "}
-                    <strong>({folder.exercises.length})</strong>
-                  </Typography>
-                </Card>
-              </StyledLink>
-            ))}
-          </Box>
+          {folders != null && folders.length > 0 ? (
+            <FolderOverview folders={folders} isLoading={isLoading} />
+          ) : null}
         </Box>
         <FolderDialog
           closeDialog={() => setIsFolderDialogOpen(false)}
@@ -168,13 +124,5 @@ async function fetchFolders() {
   const folders = await axios.get("/api/folder/get-folders");
   return folderResponseSchema.parse(folders.data.folders) as IFolder[];
 }
-
-const StyledLink = styled(Link, {
-  textDecoration: "none",
-
-  "&:hover .folder-title": {
-    color: "$secondaryColor",
-  },
-});
 
 export default ExercisesPage;
