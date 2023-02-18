@@ -8,17 +8,7 @@ import { Button } from "@/components/Button/Button";
 import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDashboard";
 import { Typography } from "@/components/Typography/Typography";
 import { server } from "@/config/index";
-
-interface TExercise {
-  name: string;
-  id: number;
-}
-
-export interface IFolder {
-  name: string;
-  id: number;
-  exercises: TExercise[];
-}
+import { IFolder } from "@/utils/types";
 
 interface Props {
   folder: IFolder;

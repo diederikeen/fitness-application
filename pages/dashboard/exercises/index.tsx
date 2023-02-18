@@ -12,8 +12,7 @@ import { ExerciseDialog } from "@/features/exercises/ExerciseDialog/ExerciseDial
 import { FolderDialog } from "@/features/exercises/FolderDialog/FolderDialog";
 import { FolderOverview } from "@/features/exercises/FolderOverview/FolderOverview";
 import { MAX_MAIN_CARD_SIZE } from "@/styles/theme";
-
-import { IFolder } from "./folders/[id]";
+import { IFolder } from "@/utils/types";
 
 function ExercisesPage() {
   const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
