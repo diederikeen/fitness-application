@@ -14,6 +14,11 @@ const StyledButton = styled("button", {
   letterSpacing: "0.5px",
   fontSize: "$3",
   fontWeight: "600",
+  transition: "background 175ms ease",
+
+  "&:hover": {
+    backgroundColor: "$primaryColor900",
+  },
 
   variants: {
     disabled: {

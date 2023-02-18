@@ -28,3 +28,14 @@ export interface ICreatedUser
   extends Pick<IUserSignUpFormValues, "firstName" | "lastName">,
     IUserPayload,
     IWeightRecord {}
+
+export interface TExercise {
+  name: string;
+  id: number;
+}
+
+export interface IFolder {
+  name: string;
+  id: number;
+  exercises: TExercise[];
+}
