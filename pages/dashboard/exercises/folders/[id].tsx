@@ -14,7 +14,7 @@ interface TExercise {
   id: number;
 }
 
-interface IFolder {
+export interface IFolder {
   name: string;
   id: number;
   exercises: TExercise[];

@@ -31,7 +31,7 @@ const StyledButton = styled("button", {
     ghost: {
       true: {
         background: "transparent",
-        color: "$textDefault",
+        color: "$primaryColor",
 
         "&:hover": {
           backgroundColor: "$grey100",

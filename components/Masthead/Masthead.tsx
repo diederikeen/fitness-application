@@ -80,7 +80,7 @@ const StyledInitials = styled("div", {
     "&:after": {
       width: "calc(100% - 1px)",
       height: "calc(100% - 1px)",
-      borderColor: "$primaryColor",
+      borderColor: "$secondaryColor",
     },
   },
 

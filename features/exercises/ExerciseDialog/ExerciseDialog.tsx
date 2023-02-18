@@ -9,27 +9,36 @@ import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { Typography } from "@/components/Typography/Typography";
 import { useToast } from "@/utils/useToast/useToast";
 
+import { IFolder } from "../../../pages/dashboard/exercises/folders/[id]";
+
 interface Props {
   closeDialog: () => void;
   isDialogOpen: boolean;
+  folders?: IFolder[];
 }
 
-export function ExerciseDialog({ closeDialog, isDialogOpen }: Props) {
+export function ExerciseDialog({ closeDialog, isDialogOpen, folders }: Props) {
   const queryClient = useQueryClient();
   const { addToast } = useToast();
 
   const formik = useFormik({
     initialValues: {
       name: "",
+      addToFolder: false,
+      folderId:
+        folders != null && folders?.length > 0 ? folders[0].id : undefined,
     },
     validationSchema: toFormikValidationSchema(exercisePayloadSchema),
     onSubmit: async (values) => {
       await handleFormSubmit(values);
-      await queryClient.invalidateQueries(["folders", "exercises"]);
+      await queryClient.invalidateQueries(["folders"]);
       closeDialog();
       addToast({ message: "Exercise created successfully", state: "success" });
     },
   });
+
+  const fields = getDefaultFields(folders?.length ?? 0);
+  const addToFolder = formik.values.addToFolder;
 
   return (
     <Dialog.Root onClose={closeDialog} isOpen={isDialogOpen}>
@@ -37,24 +46,64 @@ export function ExerciseDialog({ closeDialog, isDialogOpen }: Props) {
         Add new exercise
       </Typography>
       <FormikProvider value={formik}>
-        <FormComposer fields={fields} buttonLabel="Add exercise" />
+        <FormComposer
+          fields={
+            addToFolder
+              ? [...fields, ...renderWithFolders(folders as IFolder[])]
+              : fields
+          }
+          buttonLabel="Add exercise"
+        />
       </FormikProvider>
     </Dialog.Root>
   );
 }
 
-const fields: IField[] = [
-  {
-    name: "name",
-    type: "text",
-    label: "Exercise name",
-  },
-];
+function renderWithFolders(folders: IFolder[]): IField[] {
+  return [
+    {
+      title: "Existing folders",
+      name: "folderId",
+      id: "folderId",
+      type: "select",
+      defaultValue: folders[0].id,
+      options: folders.map((folder) => ({
+        value: folder.id,
+        label: folder.name,
+      })),
+    },
+  ];
+}
+
+function getDefaultFields(amountOfFolders: number): IField[] {
+  const folderOption = {
+    name: "addToFolder",
+    type: "checkbox",
+    label: "Add to existing folder",
+  };
+
+  let options = [
+    {
+      name: "name",
+      type: "text",
+      label: "Exercise name",
+    },
+  ];
+
+  if (amountOfFolders > 0) {
+    options = [...options, { ...folderOption }];
+  }
+
+  return options;
+}
 
 const exercisePayloadSchema = z.object({
   name: z.string(),
+  folderId: z.string().nullish(),
 });
 
-async function handleFormSubmit(values: z.infer<typeof exercisePayloadSchema>) {
-  return await axios.post("/api/exercise/create-exercise", { ...values });
+async function handleFormSubmit(values: any) {
+  return await axios.post("/api/exercise/create-exercise", {
+    ...values,
+  });
 }

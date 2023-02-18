@@ -14,6 +14,8 @@ import { ExerciseDialog } from "@/features/exercises/ExerciseDialog/ExerciseDial
 import { FolderDialog } from "@/features/exercises/FolderDialog/FolderDialog";
 import { MAX_MAIN_CARD_SIZE, styled } from "@/styles/theme";
 
+import { IFolder } from "./folders/[id]";
+
 function ExercisesPage() {
   const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
   const [isExerciseDialogOpen, setIsExerciseDialogOpen] = useState(false);
@@ -143,6 +145,7 @@ function ExercisesPage() {
         <ExerciseDialog
           closeDialog={() => setIsExerciseDialogOpen(false)}
           isDialogOpen={isExerciseDialogOpen}
+          folders={folders}
         />
       </>
     </ProtectedDashboard>
@@ -163,7 +166,7 @@ const folderResponseSchema = z.array(
 
 async function fetchFolders() {
   const folders = await axios.get("/api/folder/get-folders");
-  return folderResponseSchema.parse(folders.data.folders);
+  return folderResponseSchema.parse(folders.data.folders) as IFolder[];
 }
 
 const StyledLink = styled(Link, {

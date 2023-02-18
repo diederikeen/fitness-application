@@ -6,7 +6,7 @@ import { getUserByToken } from "@/utils/getUserByToken/getUserByToken";
 
 const payloadSchema = z.object({
   name: z.string(),
-  uid: z.string(),
+  folderId: z.string().nullable(),
 });
 
 interface Req extends NextApiRequest {
@@ -15,12 +15,15 @@ interface Req extends NextApiRequest {
 
 export default async function handler(req: Req, res: NextApiResponse) {
   const userByToken = await getUserByToken(req.cookies.AccessToken);
+  const body = payloadSchema.parse(req.body);
 
   try {
     await prisma.exercise.create({
       data: {
         uid: userByToken.uid,
-        name: req.body.name,
+        name: body.name,
+        folder_id:
+          body.folderId != null ? parseInt(body.folderId, 10) : undefined,
       },
     });
 
