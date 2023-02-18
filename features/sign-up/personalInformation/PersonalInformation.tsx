@@ -45,9 +45,7 @@ export function PersonalInformation() {
         uid: currentUser?.uid,
         photoUrl: currentUser?.photoURL,
         email: currentUser?.email,
-      });
-
-      router.push("/dashboard");
+      }).then(() => router.push("/dashboard"));
     },
   });
 

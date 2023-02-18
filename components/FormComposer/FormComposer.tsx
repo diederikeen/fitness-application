@@ -1,6 +1,7 @@
 import { useFormikContext } from "formik";
 import { HTMLProps } from "react";
 
+import { Typography } from "@/components/Typography/Typography";
 import { renderFormField } from "@/utils/renderFormField/renderFormField";
 
 import { Box } from "../Box/Box";
@@ -10,6 +11,8 @@ export interface IField extends HTMLProps<HTMLInputElement> {
   name: string;
   label?: string;
   inline?: boolean;
+  title?: string;
+  options?: Array<Record<string, string | number>>;
 }
 
 interface Props {
@@ -62,11 +65,12 @@ export function FormComposer({
           },
         }}
       >
-        {fields.map((field, index) => {
+        {fields.map((field) => {
           const isGroup = Array.isArray(field);
+
           return isGroup ? (
             <Box
-              key={index}
+              key={`${field[0].name}_index`}
               className="child-container"
               css={{
                 display: "grid",
@@ -83,7 +87,21 @@ export function FormComposer({
               )}
             </Box>
           ) : (
-            renderFormField(field, errors[field.name], touched[field.name])
+            <>
+              {field?.title !== undefined && (
+                <Typography
+                  css={{
+                    fontWeight: "bold",
+                    m: 0,
+                    mb: `-$3`,
+                    fontSize: "$4",
+                  }}
+                >
+                  {field.title}
+                </Typography>
+              )}
+              {renderFormField(field, errors[field.name], touched[field.name])}
+            </>
           );
         })}
       </Box>
