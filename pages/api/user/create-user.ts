@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import z from "zod";
 
 import { prisma } from "@/prisma/db";
 import {
@@ -12,15 +13,16 @@ interface IRequestBody {
   user: IUserPayload;
 }
 
-interface ReqProps extends NextApiRequest {
-  body: IRequestBody;
+interface Req extends NextApiRequest {
+  body: z.infer<typeof userPayloadSchema>;
 }
 
 export default async function handler(
-  req: ReqProps,
+  req: Req,
   res: NextApiResponse<ICreatedUser>
 ) {
-  const { user, userDetails } = req.body;
+  const { userDetails, user } = userPayloadSchema.parse(req.body);
+
   const createdUser = await createUser({ user, userDetails }).then(
     (data) => data
   );
@@ -45,3 +47,19 @@ async function createUser({
     },
   })) as ICreatedUser;
 }
+
+const userPayloadSchema = z.object({
+  userDetails: z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+    zipcode: z.string(),
+    country: z.string(),
+    city: z.string(),
+    streetName: z.string(),
+  }),
+  user: z.object({
+    uid: z.string(),
+    photoUrl: z.string().nullable(),
+    email: z.string(),
+  }),
+});

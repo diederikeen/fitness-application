@@ -4,23 +4,19 @@ import z from "zod";
 import { prisma } from "@/prisma/db";
 import { getUserByToken } from "@/utils/getUserByToken/getUserByToken";
 
-const payloadSchema = z.object({
-  name: z.string(),
-  uid: z.string(),
-});
-
 interface Req extends NextApiRequest {
   body: z.infer<typeof payloadSchema>;
 }
 
 export default async function handler(req: Req, res: NextApiResponse) {
   const userByToken = await getUserByToken(req.cookies.AccessToken);
+  const body = payloadSchema.parse(req.body);
 
   try {
     await prisma.folder.create({
       data: {
         uid: userByToken.uid,
-        name: req.body.name,
+        name: body.name,
       },
     });
 
@@ -34,3 +30,7 @@ export default async function handler(req: Req, res: NextApiResponse) {
 
   return res.status(200).json({});
 }
+
+const payloadSchema = z.object({
+  name: z.string(),
+});
