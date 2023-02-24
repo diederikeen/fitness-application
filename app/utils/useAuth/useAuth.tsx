@@ -10,7 +10,8 @@ import {
 } from "react";
 import { useQuery } from "react-query";
 
-import { auth } from "../../libs/firebase";
+import { auth } from "@/libs/firebase";
+
 import { ICreatedUser } from "../types";
 
 interface IUserContext {
