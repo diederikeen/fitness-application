@@ -9,7 +9,6 @@ const router = Router()
 router.use(authenticateUser);
 
 router.get('/', async (req, res) => {
-
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -24,22 +23,6 @@ router.get('/', async (req, res) => {
       message: "Something went wrong"
     })
   }
-});
-
-const createUserPayloadSchema = z.object({
-  userDetails: z.object({
-    firstName: z.string(),
-    lastName: z.string(),
-    zipcode: z.string(),
-    country: z.string(),
-    city: z.string(),
-    streetName: z.string(),
-  }),
-  user: z.object({
-    uid: z.string(),
-    photoUrl: z.string().nullable(),
-    email: z.string(),
-  }),
 });
 
 router.post('/', async (req, res) => {
@@ -60,7 +43,22 @@ router.post('/', async (req, res) => {
 
 
   return res.json({user: createdUser})
+});
 
-})
+const createUserPayloadSchema = z.object({
+  userDetails: z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+    zipcode: z.string(),
+    country: z.string(),
+    city: z.string(),
+    streetName: z.string(),
+  }),
+  user: z.object({
+    uid: z.string(),
+    photoUrl: z.string().nullable(),
+    email: z.string(),
+  }),
+});
 
 export default router;
