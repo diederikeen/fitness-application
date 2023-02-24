@@ -1,11 +1,11 @@
 import { useFormikContext } from "formik";
 import { HTMLProps } from "react";
 
-import { Typography } from "@/components/Typography/Typography";
 import { renderFormField } from "@/utils/renderFormField/renderFormField";
 
 import { Box } from "../Box/Box";
 import { Button } from "../Button/Button";
+import { Typography } from "../Typography/Typography";
 
 export interface IField extends HTMLProps<HTMLInputElement> {
   name: string;

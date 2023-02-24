@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { Box } from "@/components/Box/Box";
-import { Typography } from "@/components/Typography/Typography";
 import { styled } from "@/styles/theme";
+
+import { Box } from "../Box/Box";
+import { Typography } from "../Typography/Typography";
 
 interface Props {
   currentPage: string;

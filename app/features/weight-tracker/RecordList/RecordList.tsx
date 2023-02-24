@@ -3,11 +3,12 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { Card } from "@/components/Card/Card";
-import { DeleteRecordDialog } from "@/features/weight-tracker/DeleteRecordDialog/DeleteRecordDialog";
-import { WeightRecordListItem } from "@/features/weight-tracker/WeightRecordListItem/WeightRecordListItem";
 import { MAX_MAIN_CARD_SIZE } from "@/styles/theme";
 import { IWeightRecord } from "@/utils/types";
 import { useToast } from "@/utils/useToast/useToast";
+
+import { DeleteRecordDialog } from "../DeleteRecordDialog/DeleteRecordDialog";
+import { WeightRecordListItem } from "../WeightRecordListItem/WeightRecordListItem";
 
 interface Props {
   records: IWeightRecord[];

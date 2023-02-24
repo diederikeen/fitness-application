@@ -4,8 +4,7 @@ import { Box } from "@/components/Box/Box";
 import { Card } from "@/components/Card/Card";
 import { Typography } from "@/components/Typography/Typography";
 import { styled } from "@/styles/theme";
-
-import { IFolder } from "../../../pages/dashboard/exercises/folders/[id]";
+import { IFolder } from "@/utils/types";
 
 interface IProps {
   folders: IFolder[];

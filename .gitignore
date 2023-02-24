@@ -26,9 +26,8 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env
-.env.local
-.env*.local
+app/.env
+app/.env.local
 
 # vercel
 .vercel
@@ -39,7 +38,7 @@ next-env.d.ts
 
 # Next JS config because of env variables
 # See next.config.example.js
-next.config.js
+app/next.config.js
 
 # Misc
 .idea
@@ -49,4 +48,4 @@ next.config.js
 *.vscode
 
 # Secrets
-./libs/firebase/secrets.json
+app/libs/firebase/secrets.json

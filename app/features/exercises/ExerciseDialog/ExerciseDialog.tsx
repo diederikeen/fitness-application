@@ -7,9 +7,8 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import { Dialog } from "@/components/Dialog/Dialog";
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { Typography } from "@/components/Typography/Typography";
+import { IFolder } from "@/utils/types";
 import { useToast } from "@/utils/useToast/useToast";
-
-import { IFolder } from "../../../pages/dashboard/exercises/folders/[id]";
 
 interface Props {
   closeDialog: () => void;
