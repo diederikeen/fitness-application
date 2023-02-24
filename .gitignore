@@ -48,4 +48,4 @@ app/next.config.js
 *.vscode
 
 # Secrets
-app/libs/firebase/secrets.json
+*/**/secret.json
