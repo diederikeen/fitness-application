@@ -2,7 +2,7 @@ import {firebaseAdmin} from "../../firebase";
 
 export async function authenticateUser(req: any, res: any, next: any) {
   try {
-    const accessToken = req.cookies.AccessToken;
+    const accessToken = req.headers.authorization;
     const user = await firebaseAdmin.auth().verifyIdToken(accessToken);
 
     if (user) {

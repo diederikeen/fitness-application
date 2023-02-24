@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const uid = res.locals.user.uid;
 
-  const {name} = postFolderScheme.parse(req.body);
+  const {name} = postFolderSchema.parse(req.body);
 
   try {
     await prisma.folder.create({
@@ -49,7 +49,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-const postFolderScheme = z.object({
+const postFolderSchema = z.object({
   name: z.string(),
 });
 
