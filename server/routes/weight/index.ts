@@ -1,4 +1,6 @@
 import {Router} from 'express';
+import z from "zod";
+
 import {prisma} from "../../prisma";
 import {authenticateUser} from "../../middleware/auth";
 
@@ -8,7 +10,6 @@ router.use(authenticateUser);
 
 router.get('/', async (req, res) => {
   const uid = res.locals.user.uid;
-
   try {
     const records = await prisma.weight.findMany({
       where: {
@@ -31,10 +32,12 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const uid = res.locals.user.uid;
 
+  const {weight} = postWeightPayload.parse(req.body);
+
   try {
     const record = await prisma.weight.create({
       data: {
-        weight: req.body.weight,
+        weight: weight,
         uid: uid,
       },
     });
@@ -47,10 +50,11 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/', async (req, res) => {
+  const {id} = deleteWeightPayload.parse(req.body);
   try {
     const records = await prisma.weight.delete({
       where: {
-        id: req.body.weightId,
+        id: id,
       },
     });
 
@@ -62,13 +66,14 @@ router.delete('/', async (req, res) => {
 });
 
 router.patch('/', async (req, res) => {
+  const {id, weight} = patchWeightPayload.parse(req.body);
   try {
     const updatedRecord = await prisma.weight.update({
       where: {
-        id: req.body.id,
+        id: id,
       },
       data: {
-        weight: req.body.weight,
+        weight: weight,
       },
     });
 
@@ -77,6 +82,19 @@ router.patch('/', async (req, res) => {
     console.error(error)
     res.status(500).json({message: "Something went wrong in updating your record"});
   }
+});
+
+const deleteWeightPayload = z.object({
+  id: z.number()
+});
+
+const postWeightPayload = z.object({
+  weight: z.number()
+});
+
+const patchWeightPayload = z.object({
+  id: z.number(),
+  weight: z.number(),
 });
 
 export default router;
