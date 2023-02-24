@@ -60,4 +60,41 @@ const createUserPayloadSchema = z.object({
   }),
 });
 
+const createUserPayloadSchema = z.object({
+  userDetails: z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+    zipcode: z.string(),
+    country: z.string(),
+    city: z.string(),
+    streetName: z.string(),
+  }),
+  user: z.object({
+    uid: z.string(),
+    photoUrl: z.string().nullable(),
+    email: z.string(),
+  }),
+});
+
+router.post('/', async (req, res) => {
+  const {userDetails, user} = createUserPayloadSchema.parse(req.body);
+
+  const createdUser = prisma.user.create({
+    data: {
+      ...userDetails,
+      ...user,
+    },
+    select: {
+      photoUrl: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+    },
+  })
+
+
+  return res.json({user: createdUser})
+
+})
+
 export default router;
