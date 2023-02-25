@@ -25,10 +25,6 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# local env files
-app/.env
-app/.env.local
-
 # vercel
 .vercel
 
@@ -48,4 +44,10 @@ app/next.config.js
 *.vscode
 
 # Secrets
-*/**/secret.json
+**/.env
+**/.env.local
+**/secret.json
+
+**/node_modules
+
+**/.next
