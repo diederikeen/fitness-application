@@ -10,6 +10,7 @@ import {
 } from "react";
 import { useQuery } from "react-query";
 
+import { API_URL } from "@/config/index";
 import { auth } from "@/libs/firebase";
 
 import { ICreatedUser } from "../types";
@@ -30,7 +31,7 @@ const AuthContext = createContext<IUserContext>({
 
 async function fetchUserByEmail(email: string): Promise<ICreatedUser> {
   return await axios
-    .get("/api/user/get-user", {
+    .get(`${API_URL}/api/user`, {
       params: {
         email,
       },
