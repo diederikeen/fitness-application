@@ -7,6 +7,7 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import { Dialog } from "@/components/Dialog/Dialog";
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { Typography } from "@/components/Typography/Typography";
+import { API_URL } from "@/config/index";
 import { useToast } from "@/utils/useToast/useToast";
 
 interface Props {
@@ -56,5 +57,5 @@ const folderPayloadSchema = z.object({
 });
 
 async function handleFormSubmit(values: z.infer<typeof folderPayloadSchema>) {
-  return await axios.post("/api/folder/create-folder", { ...values });
+  return await axios.post(`${API_URL}/api/folders`, { ...values });
 }
