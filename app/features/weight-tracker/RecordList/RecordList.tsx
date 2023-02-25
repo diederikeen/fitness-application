@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { Card } from "@/components/Card/Card";
+import { API_URL } from "@/config/index";
 import { MAX_MAIN_CARD_SIZE } from "@/styles/theme";
 import { IWeightRecord } from "@/utils/types";
 import { useToast } from "@/utils/useToast/useToast";
@@ -24,9 +25,11 @@ export function RecordList({ records }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const deleteWeightRecord = useMutation({
-    mutationFn: async (weightId: number) =>
-      await axios.post("/api/weight/delete-weight", {
-        weightId,
+    mutationFn: async (id: number) =>
+      await axios.delete(`${API_URL}/api/weight`, {
+        data: {
+          id,
+        },
       }),
     onSuccess: async () => {
       addToast({

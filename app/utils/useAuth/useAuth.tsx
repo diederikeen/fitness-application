@@ -76,9 +76,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const token = await rawUser.getIdToken();
         setFbUser(rawUser);
         nookies.set(undefined, "AccessToken", token, { path: "/api" });
+        axios.defaults.headers.common.Authorization = token;
       } else {
         setFbUser(null);
         nookies.set(undefined, "AccessToken", "", { path: "/api" });
+        axios.defaults.headers.common.Authorization = "";
       }
     });
     return () => unsubscribe();

@@ -5,6 +5,7 @@ import z from "zod";
 import { Box } from "@/components/Box/Box";
 import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDashboard";
 import { Typography } from "@/components/Typography/Typography";
+import { API_URL } from "@/config/index";
 import { GraphCard } from "@/features/weight-tracker/GraphCard/GraphCard";
 import { RecordList } from "@/features/weight-tracker/RecordList/RecordList";
 import { MAX_MAIN_CARD_SIZE, styled } from "@/styles/theme";
@@ -63,7 +64,7 @@ const recordsSchema = z.array(
 );
 
 async function fetchRecords() {
-  const response = await axios.get("/api/weight/get-weight");
+  const response = await axios.get(`${API_URL}/api/weight`);
   return recordsSchema.parse(response.data.records);
 }
 

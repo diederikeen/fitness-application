@@ -9,6 +9,7 @@ import { Box } from "@/components/Box/Box";
 import { Button } from "@/components/Button/Button";
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { Typography } from "@/components/Typography/Typography";
+import { API_URL } from "@/config/index";
 import { IWeightRecord } from "@/utils/types";
 import { useToast } from "@/utils/useToast/useToast";
 
@@ -115,7 +116,7 @@ async function updateWeight(
   id: IWeightRecord["id"],
   weight: IWeightRecord["id"]
 ) {
-  return await axios.post("/api/weight/update-weight", {
+  return await axios.patch(`${API_URL}/api/weight`, {
     id,
     weight,
   });
