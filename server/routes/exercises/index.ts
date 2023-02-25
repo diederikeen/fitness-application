@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
         uid: uid,
         name: name,
         folder_id:
-          folderId !== null ? parseInt(folderId, 10) : undefined,
+          folderId ? parseInt(folderId, 10) : null,
       },
     });
     return res.status(200).json({message: "Exercise created successfully"});
@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
 
 const postExerciseSchema = z.object({
   name: z.string(),
-  folderId: z.string().nullable()
+  folderId: z.string().nullish(),
 });
 
 router.get('/single', async (req, res) => {

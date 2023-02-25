@@ -7,6 +7,7 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import { Dialog } from "@/components/Dialog/Dialog";
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { Typography } from "@/components/Typography/Typography";
+import { API_URL } from "@/config/index";
 import { IFolder } from "@/utils/types";
 import { useToast } from "@/utils/useToast/useToast";
 
@@ -29,7 +30,8 @@ export function ExerciseDialog({ closeDialog, isDialogOpen, folders }: Props) {
     },
     validationSchema: toFormikValidationSchema(exercisePayloadSchema),
     onSubmit: async (values) => {
-      await handleFormSubmit(values);
+      const { folderId } = values;
+      await handleFormSubmit({ ...values, folderId: folderId?.toString() });
       await queryClient.invalidateQueries(["folders"]);
       closeDialog();
       addToast({ message: "Exercise created successfully", state: "success" });
@@ -101,8 +103,8 @@ const exercisePayloadSchema = z.object({
   folderId: z.string().nullish(),
 });
 
-async function handleFormSubmit(values: any) {
-  return await axios.post("/api/exercise/create-exercise", {
+async function handleFormSubmit(values: z.infer<typeof exercisePayloadSchema>) {
+  return await axios.post(`${API_URL}/api/exercises`, {
     ...values,
   });
 }

@@ -6,6 +6,7 @@ import cors from "cors";
 import user from "./routes/user";
 import weight from "./routes/weight";
 import folders from "./routes/folders";
+import exercises from "./routes/exercises";
 
 const PORT = 8080;
 const corsOptions = {
@@ -25,5 +26,6 @@ app.use(bodyParser.json());
 app.use('/api/user', user);
 app.use('/api/weight', weight);
 app.use('/api/folders', folders);
+app.use('/api/exercises', exercises);
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`))

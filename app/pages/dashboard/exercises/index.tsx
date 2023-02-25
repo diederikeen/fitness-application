@@ -8,6 +8,7 @@ import { Box } from "@/components/Box/Box";
 import { Button } from "@/components/Button/Button";
 import { ProtectedDashboard } from "@/components/ProtectedDashboard/ProtectedDashboard";
 import { Typography } from "@/components/Typography/Typography";
+import { API_URL } from "@/config/index";
 import { ExerciseDialog } from "@/features/exercises/ExerciseDialog/ExerciseDialog";
 import { FolderDialog } from "@/features/exercises/FolderDialog/FolderDialog";
 import { FolderOverview } from "@/features/exercises/FolderOverview/FolderOverview";
@@ -120,7 +121,7 @@ const folderResponseSchema = z.array(
 );
 
 async function fetchFolders() {
-  const folders = await axios.get("/api/folder/get-folders");
+  const folders = await axios.get(`${API_URL}/api/folders`);
   return folderResponseSchema.parse(folders.data.folders) as IFolder[];
 }
 
