@@ -35,6 +35,7 @@
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "no-await-in-loop": "error",
+    "@typescript-eslint/restrict-template-expressions": "off",
     "no-console": [
       "error",
       {
