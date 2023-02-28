@@ -6,6 +6,7 @@ import z from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
+import { API_URL } from "@/config/index";
 import {
   IFirebaseUser,
   IUserPayload,
@@ -45,7 +46,9 @@ export function PersonalInformation() {
         uid: currentUser?.uid,
         photoUrl: currentUser?.photoURL,
         email: currentUser?.email,
-      }).then(() => router.push("/dashboard"));
+      });
+
+      router.push("/dashboard");
     },
   });
 
@@ -61,7 +64,7 @@ async function onSignupSubmit(
   user: IUserPayload
 ) {
   return await axios
-    .post("/api/user/create-user", {
+    .post(`${API_URL}/api/user`, {
       userDetails: formValues,
       user,
     })

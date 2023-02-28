@@ -8,6 +8,7 @@ import { Box } from "@/components/Box/Box";
 import { Card } from "@/components/Card/Card";
 import { FormComposer, IField } from "@/components/FormComposer/FormComposer";
 import { LineGraph } from "@/components/LineGraph/LineGraph";
+import { API_URL } from "@/config/index";
 import { MAX_MAIN_CARD_SIZE } from "@/styles/theme";
 import { IWeightRecord } from "@/utils/types";
 import { useToast } from "@/utils/useToast/useToast";
@@ -72,7 +73,7 @@ export function GraphCard({ records, hasRecords }: Props) {
 }
 
 async function addWeightRecord(weight: number) {
-  const record = await axios.post("/api/weight/add-weight", {
+  const record = await axios.post(`${API_URL}/api/weight`, {
     weight,
   });
 
