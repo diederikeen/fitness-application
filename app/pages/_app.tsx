@@ -38,12 +38,14 @@ const queryClient = new QueryClient();
 export default function App({ Component, pageProps }: AppProps) {
   globalStyles();
   return (
-    <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-        <AuthProvider>
-          <Component {...pageProps} />
-        </AuthProvider>
-      </ToastProvider>
-    </QueryClientProvider>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider>
+          <AuthProvider>
+            <Component {...pageProps} />
+          </AuthProvider>
+        </ToastProvider>
+      </QueryClientProvider>
+    </>
   );
 }
