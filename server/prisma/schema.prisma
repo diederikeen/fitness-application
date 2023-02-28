@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            	Int           @id @default(autoincrement())
+  email         	String        @unique
+  firstName     		String
+  lastName      	String
+  photoUrl      	String?
+  streetName    	String?
+  zipcode       	String?
+  city          	String?
+  country       	String?
+  uid							String				@unique
+  weight					Weight[]
+  exercises				Exercise[]
+  folders					Folder[]
+}
+
+model Weight {
+	id Int @unique @default(autoincrement())
+	uid String
+	weight Float
+	date DateTime @default(now())
+	note String?
+	user User @relation(fields: [uid], references: [uid])
+}
+
+model Folder {
+	id Int @unique @default(autoincrement())
+	uid String
+	name String
+	user User @relation(fields: [uid], references: [uid])
+	exercises Exercise[]
+}
+
+model Exercise {
+	id Int @unique @default(autoincrement())
+	uid String
+	user User @relation(fields: [uid], references: [uid])
+	name String
+	folder_id Int?
+	folder Folder? @relation(fields: [folder_id], references: [id])
+}
