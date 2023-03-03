@@ -1,7 +1,7 @@
+import { UilArrowRight } from "@iconscout/react-unicons";
 import Link from "next/link";
 
 import { Box } from "@/components/Box/Box";
-import { Card } from "@/components/Card/Card";
 import { Typography } from "@/components/Typography/Typography";
 import { styled } from "@/styles/theme";
 import { IFolder } from "@/utils/types";
@@ -31,27 +31,51 @@ export function FolderOverview({ folders, isLoading }: IProps) {
       {isLoading && <Typography>Getting your folders.</Typography>}
       {folders?.map((folder) => (
         <StyledLink href={`./exercises/folders/${folder.id}`} key={folder.id}>
-          <Card
-            css={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Typography css={{ fontWeight: "bold" }} className="folder-title">
-              {folder.name}
-            </Typography>
+          <StyledTile>
+            <div className={"row-content"}>
+              <Typography
+                css={{ fontWeight: "bold", m: 0 }}
+                className="folder-title"
+              >
+                {folder.name}
+              </Typography>
 
-            <Typography css={{ fontSize: "$2", color: "$grey400", mt: "0" }}>
-              Number of exercises: <strong>({folder.exercises.length})</strong>
-            </Typography>
-          </Card>
+              <Typography css={{ fontSize: "$2", color: "$grey400", m: "0" }}>
+                Number of exercises:{" "}
+                <strong>({folder.exercises.length})</strong>
+              </Typography>
+            </div>
+
+            <Box css={{ ml: "auto" }} className="icon-arrow">
+              <UilArrowRight color="inherit" />
+            </Box>
+          </StyledTile>
         </StyledLink>
       ))}
     </Box>
   );
 }
+
+const StyledTile = styled("div", {
+  py: 0,
+  display: "flex",
+  alignItems: "center",
+  backgroundColor: "$primaryBg",
+  p: "$4",
+  borderRadius: "$3",
+  border: "1px solid $grey100",
+
+  "@bp3": {
+    flexDirection: "column",
+    justifyContent: "center",
+    textAlign: "center",
+    p: "$6",
+
+    ".icon-arrow": {
+      display: "none",
+    },
+  },
+});
 
 const StyledLink = styled(Link, {
   textDecoration: "none",

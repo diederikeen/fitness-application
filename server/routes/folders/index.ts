@@ -55,7 +55,7 @@ const postFolderSchema = z.object({
 
 
 router.get('/single', async (req, res) => {
-  const {id} = getSingleFolderSchema.parse(req.body);
+  const {id} = getSingleFolderSchema.parse(req.query);
 
   try {
     const folder = await prisma.folder.findUnique({

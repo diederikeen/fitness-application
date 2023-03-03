@@ -13,7 +13,6 @@ import { ExerciseDialog } from "@/features/exercises/ExerciseDialog/ExerciseDial
 import { FolderDialog } from "@/features/exercises/FolderDialog/FolderDialog";
 import { FolderOverview } from "@/features/exercises/FolderOverview/FolderOverview";
 import { MAX_MAIN_CARD_SIZE } from "@/styles/theme";
-import { IFolder } from "@/utils/types";
 
 function ExercisesPage() {
   const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
@@ -108,21 +107,22 @@ function ExercisesPage() {
   );
 }
 
+export const exerciseSchema = z.object({
+  name: z.string(),
+  id: z.number(),
+});
+
 const folderResponseSchema = z.array(
   z.object({
     name: z.string(),
     id: z.number(),
-    exercises: z.array(
-      z.object({
-        name: z.string(),
-      })
-    ),
+    exercises: z.array(exerciseSchema),
   })
 );
 
 async function fetchFolders() {
   const folders = await axios.get(`${API_URL}/api/folders`);
-  return folderResponseSchema.parse(folders.data.folders) as IFolder[];
+  return folderResponseSchema.parse(folders.data.folders);
 }
 
 export default ExercisesPage;
