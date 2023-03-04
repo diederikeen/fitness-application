@@ -40,7 +40,7 @@ const StyledMasthead = styled("header", {
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
-  px: "$3",
+  px: "$5",
   borderBottom: "1px solid $grey300",
   backgroundColor: "$altBackground",
 
@@ -58,21 +58,32 @@ const StyledMasthead = styled("header", {
     fontSize: "$2",
     mr: "$5",
     lineHeight: "$4",
+    display: "none",
+
+    "@bp3": {
+      display: "block",
+    },
   },
 });
 
 const StyledInitials = styled("div", {
-  width: "40px",
-  height: "40px",
+  width: "36px",
+  height: "36px",
   borderRadius: "$full",
   backgroundColor: "$white",
   color: "$altBackground",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: "$4",
+  fontSize: "$3",
   position: "relative",
   zIndex: 1,
+
+  "@bp2": {
+    width: "40px",
+    height: "40px",
+    fontSize: "$4",
+  },
 
   "&:hover": {
     cursor: "pointer",
